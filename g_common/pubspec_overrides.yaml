@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: g_lib
+dependency_overrides:
+  g_lib:
+    path: ../g_lib
