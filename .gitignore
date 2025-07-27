@@ -333,3 +333,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 .metadata
+.DS_Store
