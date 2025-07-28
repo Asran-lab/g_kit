@@ -6,6 +6,8 @@ resolution: workspace
 packages:
   - g_lib
   - g_common
+  - g_model
+  - g_plugin
   
 scripts:
   bootstrap:

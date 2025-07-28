@@ -9,3 +9,4 @@ export 'g_platform.dart';
 export 'g_color.dart';
 export 'g_json.dart';
 export 'g_uuid.dart';
+export 'g_route_observer.dart';

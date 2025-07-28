@@ -14,6 +14,13 @@ dependencies:
   
   # 유틸성 라이브러리
   path_provider: ^2.1.5          # 파일 경로 관련
+  app_links: ^6.4.0              # 앱 링크 관련
+
+  # 인증 라이브러리
+  local_auth: ^2.3.0             # 생체 인식 관련
+
+  # 권한 라이브러리
+  permission_handler: ^12.0.1     # 권한 관리
 
   # 스토리지 라이브러리
   sqflite: ^2.4.2               # 로컬 db 데이터베이스
