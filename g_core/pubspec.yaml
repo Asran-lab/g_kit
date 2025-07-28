@@ -1,12 +1,13 @@
-name: g_common
+name: g_core
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: ''
+homepage: 'https://github.com/g-kit/g_core'
+repository: 'https://github.com/g-kit/g_core'
 publish_to: 'none'
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.3.0"
 
 dependencies:
   flutter:
@@ -14,7 +15,10 @@ dependencies:
 
   g_lib:
     path: ../g_lib
-
+  
+  g_common:
+    path: ../g_common
+  
   g_model:
     path: ../g_model
 
@@ -22,4 +26,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
 flutter:

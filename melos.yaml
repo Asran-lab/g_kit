@@ -6,6 +6,7 @@ resolution: workspace
 packages:
   - g_lib
   - g_common
+  - g_core
   - g_model
   - g_plugin
   
