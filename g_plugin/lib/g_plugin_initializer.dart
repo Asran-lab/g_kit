@@ -2,6 +2,13 @@ import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_model/initializer/g_initializer.dart';
 
+/// 사용 예시
+/// ```dart
+/// await GPluginInitializer([
+///   GPermissionInitializer(),
+///   GBiometricInitializer(),
+/// ]).initializeAll();
+/// ```
 class GPluginInitializer {
   final List<GInitializer> _initializers;
   GPluginInitializer(this._initializers);

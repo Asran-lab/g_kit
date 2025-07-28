@@ -8,6 +8,22 @@ import 'service/g_permission_impl.dart';
 /// 권한 초기화 클래스
 ///
 /// GInitializer를 상속하여 플러그인 초기화 시스템과 통합됩니다.
+///
+/// Android 설정
+/// android.useAndroidX=true
+/// android.enableJetifier=true
+///
+/// android {
+///   compileSdkVersion 35
+/// }
+///
+/// iOS 설정
+/// use_frameworks!
+///
+/// 참고
+/// https://pub.dev/packages/permission_handler
+///
+///
 class GPermissionInitializer extends GInitializer {
   static final GPermissionInitializer _instance =
       GPermissionInitializer._internal();
