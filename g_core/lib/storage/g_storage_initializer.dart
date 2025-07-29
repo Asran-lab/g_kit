@@ -12,6 +12,7 @@ class GStorageInitializer extends GInitializer {
 
   @override
   String get name => 'storage';
+
   @override
   Future<void> initialize() async {
     await guardFuture<void>(() async {
@@ -22,7 +23,16 @@ class GStorageInitializer extends GInitializer {
         final prefsStrategy = await GStorageFactory.create(GStorageType.prefs);
         final secureStrategy =
             await GStorageFactory.create(GStorageType.secure);
-      } else {}
+
+        context.registerStrategy(GStorageType.prefs, prefsStrategy);
+        context.registerStrategy(GStorageType.secure, secureStrategy);
+      } else {
+        context.setType = _type!;
+        final strategy = await GStorageFactory.create(_type!);
+        context.registerStrategy(_type!, strategy);
+      }
+      // context 초기화
+      await context.initialize();
 
       // 전략 초기화 완료
       _context = context;
