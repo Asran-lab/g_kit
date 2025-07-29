@@ -9,5 +9,5 @@ T resolveStrategy<T>({
   if (strategy == null) {
     throw Exception('Strategy not found for type: $type');
   }
-  return strategy;
+  return strategy as T;
 }

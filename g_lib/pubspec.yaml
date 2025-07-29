@@ -30,6 +30,11 @@ dependencies:
   flutter_secure_storage: ^9.2.4 # 보안 스토리지
   shared_preferences: ^2.5.3     # 공유 환경 변수
 
+  # 네트워크 라이브러리
+  dio: ^5.8.0+1                 # 네트워크 라이브러리
+  socket_io_client: ^3.1.2      # 소켓 라이브러리
+  http_certificate_pinning: ^3.0.1 # 인증서 파이닝 관련
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
