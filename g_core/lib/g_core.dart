@@ -8,3 +8,6 @@ export 'g_core_initializer.dart';
 
 /* 네트워크 */
 export 'network/network.dart';
+
+/* 라우터 */
+export 'router/router.dart';
