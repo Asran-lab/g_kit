@@ -12,9 +12,6 @@ import '../models/permission_result.dart';
 /// ## 사용 예제
 ///
 /// ```dart
-/// // 기본 초기화
-/// await GPermission.initialize();
-///
 /// // 권한 상태 확인
 /// final status = await GPermission.checkPermission(PermissionType.camera);
 ///
@@ -29,18 +26,13 @@ import '../models/permission_result.dart';
 ///   PermissionRequest.basic(PermissionType.microphone),
 /// ]);
 /// ```
+///
+/// 주의: 사용 전에 GPluginInitializer.initializeAll()을 통해 초기화해야 합니다.
 class GPermission {
   static final GPermissionInitializer _initializer = GPermissionInitializer();
 
   /// 초기화 상태 확인
   static bool get isInitialized => _initializer.isInitialized;
-
-  /// 권한 초기화
-  ///
-  /// 앱 시작 시 한 번만 호출해야 합니다.
-  static Future<void> initialize() async {
-    await _initializer.initialize();
-  }
 
   /// 서비스 정리
   ///

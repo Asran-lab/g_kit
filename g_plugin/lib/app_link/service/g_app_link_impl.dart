@@ -173,16 +173,21 @@ class GAppLinkImpl implements GAppLinkService {
       final uri = Uri.parse(link);
       final pathSegments = uri.pathSegments;
 
-      // 마지막 세그먼트가 ID일 가능성이 높음
+      // 먼저 쿼리 파라미터에서 ID 찾기
+      if (uri.queryParameters.containsKey('id')) {
+        return uri.queryParameters['id'];
+      }
+
+      // 마지막 path segment를 ID로 간주 (숫자가 아니어도 포함)
       if (pathSegments.isNotEmpty) {
         final lastSegment = pathSegments.last;
-        if (int.tryParse(lastSegment) != null) {
+        // 빈 문자열이 아니면 ID로 간주
+        if (lastSegment.isNotEmpty) {
           return lastSegment;
         }
       }
 
-      // 쿼리 파라미터에서 ID 찾기
-      return uri.queryParameters['id'];
+      return null;
     } catch (e) {
       return null;
     }

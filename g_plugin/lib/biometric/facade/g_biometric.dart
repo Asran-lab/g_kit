@@ -8,9 +8,6 @@ import 'package:g_plugin/biometric/g_biometric_initializer.dart';
 /// ## 사용 예제
 ///
 /// ```dart
-/// // 기본 초기화
-/// await GBiometric.initialize();
-///
 /// // 생체인식 지원 확인
 /// if (await GBiometric.isDeviceSupported()) {
 ///   // 생체인식 사용 가능
@@ -21,18 +18,14 @@ import 'package:g_plugin/biometric/g_biometric_initializer.dart';
 ///   localizedReason: '로그인을 위해 생체인식을 확인해주세요',
 /// );
 /// ```
+///
+/// 주의: 사용 전에 GPluginInitializer.initializeAll()을 통해 초기화해야 합니다.
 class GBiometric {
   static final GBiometricInitializer _initializer = GBiometricInitializer();
 
   /// 초기화 상태 확인
   static bool get isInitialized => _initializer.isInitialized;
 
-  /// 생체인식 초기화
-  ///
-  /// 앱 시작 시 한 번만 호출해야 합니다.
-  static Future<void> initialize() async {
-    await _initializer.initialize();
-  }
 
   /// 디바이스가 생체 인증을 지원하는지 확인
   ///
