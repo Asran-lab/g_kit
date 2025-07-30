@@ -26,4 +26,31 @@ scripts:
   build_apk:
     run: melos exec --dir-exists=android -- flutter build apk
   build_ios:
-    run melos exec --dir-exists=ios -- flutter build ios
+    run: melos exec --dir-exists=ios -- flutter build ios
+  clean:
+    run: melos exec -- flutter clean
+  clean-all:
+    run: melos clean
+  clean-cache:
+    run: melos exec -- flutter pub cache clean
+  # Git 관련 명령어들
+  git-status:
+    run: git status
+  git-add:
+    run: git add .
+  git-commit:
+    run: ./scripts/git_commit.sh
+  git-commit-push:
+    run: ./scripts/git_commit.sh --push
+  git-push:
+    run: git push
+  git-pull:
+    run: git pull
+  git-log:
+    run: git log --oneline -10
+  git-diff:
+    run: git diff --cached
+  git-stash:
+    run: git stash
+  git-stash-pop:
+    run: git stash pop
