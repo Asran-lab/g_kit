@@ -11,3 +11,4 @@ export 'g_json.dart';
 export 'g_uuid.dart';
 export 'g_route_observer.dart';
 export 'g_resolve_strategy.dart';
+export 'g_theme_mode_manager.dart';

@@ -9,6 +9,7 @@ packages:
   - g_core
   - g_model
   - g_plugin
+  - g_ui
   
 scripts:
   bootstrap:
