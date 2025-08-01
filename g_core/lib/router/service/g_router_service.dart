@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
+import 'package:g_core/router/common/g_router_config.dart';
 import 'package:g_core/router/common/g_router_state.dart' show GRouterState;
 
 /// 라우터 서비스 인터페이스
@@ -11,7 +12,11 @@ abstract class GRouterService {
 
   /// 라우터 초기화
   /// 앱 시작 시 한 번만 호출됩니다.
-  Future<void> initialize();
+  Future<void> initialize(
+    List<GRouteConfig>? configs, {
+    List<GShellRouteConfig>? shellConfigs,
+    String initialPath = '/',
+  });
 
   /// 라우터 정리
   /// 앱 종료 시 호출됩니다.
