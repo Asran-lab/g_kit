@@ -7,7 +7,7 @@ export 'widgets/widget.dart';
 export 'themes/theme.dart';
 
 /* 확장 */
-export 'extensions/g_gradient_theme_extension.dart';
+export 'extensions/extension.dart';
 
 /* 컨피그 */
 export 'configs/g_color_config.dart';

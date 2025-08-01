@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:g_plugin/app_link/facade/g_app_link.dart';
 import 'package:g_plugin/app_link/g_app_link_initializer.dart';
@@ -22,7 +24,7 @@ void main() {
     test('기본 인스턴스 생성 확인', () async {
       // 콜백 설정으로 인스턴스 생성
       GAppLink.setCallbacks(
-        onDeepLink: (link) => print('Received: $link'),
+        onDeepLink: (link) => log('Received: $link'),
         deepLinkTypes: {
           'test': (path) => path.contains('test'),
         },
@@ -30,7 +32,7 @@ void main() {
 
       // 인스턴스 생성 확인
       final names = GAppLink.registeredInstanceNames;
-      print('Registered names: $names');
+      log('Registered names: $names');
       expect(names.length, 1);
       expect(names.contains('default'), true);
 
@@ -41,20 +43,20 @@ void main() {
     test('다중 인스턴스 생성 확인', () async {
       // 기본 인스턴스
       GAppLink.setCallbacks(
-        onDeepLink: (link) => print('Default: $link'),
+        onDeepLink: (link) => log('Default: $link'),
         deepLinkTypes: {'home': (path) => path.contains('home')},
       );
 
       // 쇼핑 인스턴스
       GAppLink.setCallbacks(
         name: 'shopping',
-        onDeepLink: (link) => print('Shopping: $link'),
+        onDeepLink: (link) => log('Shopping: $link'),
         deepLinkTypes: {'product': (path) => path.contains('product')},
       );
 
       // 인스턴스 확인
       final names = GAppLink.registeredInstanceNames;
-      print('Registered names: $names');
+      log('Registered names: $names');
       expect(names.length, 2);
       expect(names.contains('default'), true);
       expect(names.contains('shopping'), true);

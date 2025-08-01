@@ -48,33 +48,10 @@ class GGradientThemeExtension extends ThemeExtension<GGradientThemeExtension> {
   /// 모든 그라데이션 키 목록을 가져옵니다
   List<String> get keys => gradientMap.keys.toList();
 
-  /// 기본 그라데이션들을 제공합니다
+  /// 기본 그라데이션들을 제공합니다 (팩토리 사용)
   static Map<String, Gradient> get defaultGradients => {
-        'primary': const LinearGradient(
-          colors: [Colors.blue, Colors.purple],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        'secondary': const LinearGradient(
-          colors: [Colors.green, Colors.blue],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        'tertiary': const LinearGradient(
-          colors: [Colors.orange, Colors.red],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        'surface': const LinearGradient(
-          colors: [Colors.grey, Colors.white],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        'error': const LinearGradient(
-          colors: [Colors.red, Colors.redAccent],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        'primary': GGradientFactory.primary,
+        'rainbow': GGradientFactory.rainbow,
       };
 
   /// 기본 그라데이션 테마 확장을 생성합니다
@@ -236,4 +213,101 @@ class GGradientWidgets {
       ),
     );
   }
+
+  /// 직접 그라데이션을 사용하는 텍스트 위젯
+  static Widget gradientTextWithGradient({
+    required Gradient gradient,
+    required String text,
+    TextStyle? style,
+    int? maxLines,
+    TextOverflow? overflow,
+  }) {
+    return ShaderMask(
+      shaderCallback: (bounds) => gradient.createShader(bounds),
+      child: GText(
+        text,
+        style: style?.copyWith(color: Colors.white) ??
+            const TextStyle(color: Colors.white),
+        maxLines: maxLines,
+        overflow: overflow,
+      ),
+    );
+  }
+
+  /// 직접 그라데이션을 사용하는 아이콘 위젯
+  static Widget gradientIconWithGradient({
+    required Gradient gradient,
+    required IconData icon,
+    double? size,
+  }) {
+    return ShaderMask(
+      shaderCallback: (bounds) => gradient.createShader(bounds),
+      child: Icon(
+        icon,
+        size: size,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+/// 미리 정의된 그라데이션 팩토리 클래스
+///
+/// 사용 예시:
+/// ```dart
+/// // 미리 정의된 그라데이션 사용
+/// final gradient = GGradientFactory.pinkToPurple;
+///
+/// // 커스텀 그라데이션 생성
+/// final customGradient = GGradientFactory.custom(
+///   colors: [Colors.blue, Colors.green, Colors.yellow],
+///   begin: Alignment.topLeft,
+///   end: Alignment.bottomRight,
+/// );
+/// ```
+class GGradientFactory {
+  /// 핑크에서 보라색으로 이어지는 그라데이션
+
+  /// 커스텀 그라데이션을 생성합니다
+  static LinearGradient custom({
+    required List<Color> colors,
+    AlignmentGeometry begin = Alignment.centerLeft,
+    AlignmentGeometry end = Alignment.centerRight,
+    List<double>? stops,
+    TileMode tileMode = TileMode.clamp,
+    GradientTransform? transform,
+  }) {
+    return LinearGradient(
+      colors: colors,
+      begin: begin,
+      end: end,
+      stops: stops,
+      tileMode: tileMode,
+      transform: transform,
+    );
+  }
+
+  static LinearGradient get primary => LinearGradient(
+        colors: [
+          // context.colorScheme.primary,
+          // context.colorScheme.secondary,
+        ],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      );
+
+  /// 무지개 그라데이션을 생성합니다
+  static LinearGradient get rainbow => const LinearGradient(
+        colors: [
+          Colors.red,
+          Colors.orange,
+          Colors.yellow,
+          Colors.green,
+          Colors.blue,
+          Colors.indigo,
+          Colors.purple,
+        ],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      );
 }
