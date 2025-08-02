@@ -14,3 +14,6 @@ export 'package:g_lib/g_lib_plugin.dart';
 
 // 네트워크 라이브러리
 export 'package:g_lib/g_lib_network.dart';
+
+// 라우팅 라이브러리
+export 'package:g_lib/g_lib_router.dart';

@@ -41,6 +41,9 @@ abstract class GRouterService {
   /// 상세 페이지로 이동할 때 사용
   Future<void> go(String path, {GJson? arguments});
 
+  /// 네임드 라우트로 이동
+  Future<void> goNamed(String name, {GJson? arguments});
+
   /// 이전 페이지로 돌아가기 (go로 이동한 경우에만)
   Future<void> goBack();
 
@@ -52,12 +55,6 @@ abstract class GRouterService {
 
   /// 스택을 특정 경로로 교체
   Future<void> goUntil(String path, {GJson? arguments});
-
-  /// 라우터 리스너 추가
-  void addListener(VoidCallback listener);
-
-  /// 라우터 리스너 제거
-  void removeListener(VoidCallback listener);
 
   /// 라우터 상태 변경 스트림
   Stream<GRouterState> get routerStateStream;

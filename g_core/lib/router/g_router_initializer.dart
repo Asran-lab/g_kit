@@ -3,8 +3,6 @@ import 'package:g_common/utils/g_logger.dart';
 import 'package:g_core/router/router.dart';
 import 'package:g_model/initializer/g_initializer.dart';
 
-import 'common/g_router_config.dart';
-
 class GRouterInitializer extends GInitializer {
   final List<GRouteConfig>? configs;
   final List<GShellRouteConfig>? shellConfigs;
@@ -28,15 +26,12 @@ class GRouterInitializer extends GInitializer {
   @override
   Future<void> initialize() async {
     await guardFuture<void>(() async {
-      final GRouterService? _service;
-      // GRouter.initialize(
-      //   routes: configs ?? [],
-      //   shellRoutes: shellConfigs,
-      //   initialPath: initialPath,
-      //   errorHandler: errorHandler,
-      //   redirectHandler: redirectHandler,
-      //   debugLogging: enableLogging,
-      // );
+      final GRouterService service = GRouter.instance;
+      service.initialize(
+        configs,
+        shellConfigs: shellConfigs,
+        initialPath: initialPath,
+      );
     }, onError: (e, s) {
       Logger.e('Failed to initialize router', error: e);
       throw e;
