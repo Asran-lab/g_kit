@@ -88,15 +88,16 @@ class GRouter {
   }
 
   /// RouterConfig 반환
-  /// 
+  ///
   /// MaterialApp.router(routerConfig: GRouter.config) 형태로 사용
-  static RouterConfig<Object?> get config => instance.routerConfig;
+  static RouterConfig<Object>? get config => instance.routerConfig;
 
   /// 현재 경로 반환
   static String get currentPath => instance.currentPath;
 
   /// 현재 라우트 정보 반환
-  static RouteInformation? get currentRouteInformation => instance.currentRouteInformation;
+  static RouteInformation? get currentRouteInformation =>
+      instance.currentRouteInformation;
 
   /// 라우터 초기화 여부 확인
   static bool get initialized => instance.isInitialized;

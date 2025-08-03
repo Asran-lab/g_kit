@@ -18,7 +18,7 @@ class GRouterImpl extends GRouterService {
   bool _isInitialized = false;
 
   @override
-  RouterConfig<Object?> get routerConfig => _goRouter;
+  RouterConfig<Object>? get routerConfig => _goRouter;
 
   @override
   bool get isInitialized => _isInitialized;

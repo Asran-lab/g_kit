@@ -8,7 +8,7 @@ import 'package:g_core/router/common/g_router_state.dart' show GRouterState;
 abstract class GRouterService {
   /// RouterConfig 반환
   /// MaterialApp.router의 routerConfig에 등록할 수 있습니다.
-  RouterConfig<Object?> get routerConfig;
+  RouterConfig<Object>? get routerConfig;
 
   /// 라우터 초기화
   /// 앱 시작 시 한 번만 호출됩니다.
