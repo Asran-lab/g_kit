@@ -26,9 +26,8 @@ class GRouterInitializer extends GInitializer {
   @override
   Future<void> initialize() async {
     await guardFuture<void>(() async {
-      final GRouterService service = GRouter.instance;
-      service.initialize(
-        configs,
+      await GRouter.initialize(
+        configs ?? [],
         shellConfigs: shellConfigs,
         initialPath: initialPath,
       );
@@ -36,6 +35,5 @@ class GRouterInitializer extends GInitializer {
       Logger.e('Failed to initialize router', error: e);
       throw e;
     });
-    // await GRouter.initialize();
   }
 }
