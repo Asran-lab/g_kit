@@ -4,12 +4,18 @@ import 'package:g_lib/g_lib_storage.dart';
 
 class GPrefsStorageStrategy extends GStorageStrategy {
   late final SharedPreferences _prefs;
+  bool _isInitialized = false;
+
+  @override
+  bool get isInitialized => _isInitialized;
+
   @override
   Future<void> initialize() async {
     await guardFuture<void>(() async {
       _prefs = await SharedPreferences.getInstance();
       // 초기화 시 만료된 데이터 정리
       await cleanupExpired();
+      _isInitialized = true;
     });
   }
 

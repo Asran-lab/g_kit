@@ -2,6 +2,9 @@ abstract class GStorageStrategy {
   /// 초기화
   Future<void> initialize();
 
+  /// 초기화 상태 확인
+  bool get isInitialized;
+
   /// 키에 대한 값 조회
   Future<dynamic> get({required String key});
 

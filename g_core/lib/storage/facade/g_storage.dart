@@ -2,6 +2,9 @@ import 'package:g_core/storage/common/g_storage_type.dart' show GStorageType;
 import 'package:g_core/storage/g_storage_initializer.dart';
 
 class GStorage {
+  /// 초기화 상태 확인
+  static bool get isInitialized => GStorageInitializer.isInitialized;
+
   /// 읽기
   static Future<dynamic> get({
     required String key,

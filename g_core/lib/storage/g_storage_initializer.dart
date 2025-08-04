@@ -48,4 +48,6 @@ class GStorageInitializer extends GInitializer {
     }
     return _context!;
   }
+
+  static bool get isInitialized => _context != null;
 }

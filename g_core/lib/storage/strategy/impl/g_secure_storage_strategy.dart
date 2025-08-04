@@ -4,11 +4,17 @@ import 'package:g_lib/g_lib_storage.dart';
 
 class GSecureStorageStrategy extends GStorageStrategy {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  bool _isInitialized = false;
+
+  @override
+  bool get isInitialized => _isInitialized;
+
   @override
   Future<void> initialize() async {
     await guardFuture<void>(() async {
       // 초기화 시 만료된 데이터 정리
       await cleanupExpired();
+      _isInitialized = true;
     });
   }
 

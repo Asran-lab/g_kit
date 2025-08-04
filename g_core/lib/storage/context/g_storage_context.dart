@@ -3,6 +3,7 @@ import 'package:g_core/storage/storage.dart';
 
 class GStorageContext implements GStorageStrategy {
   final Map<GStorageType, GStorageStrategy> _strategies = {};
+  bool _isInitialized = false;
 
   GStorageType _type = GStorageType.prefs;
   GStorageType get type => _type;
@@ -11,17 +12,20 @@ class GStorageContext implements GStorageStrategy {
     _type = type;
   }
 
+  @override
+  bool get isInitialized => _isInitialized;
+
   void registerStrategy(GStorageType type, GStorageStrategy strategy) {
     _strategies[type] = strategy;
   }
 
   @override
   Future<void> initialize() async {
-    final prefsStrategy = await GStorageFactory.create(GStorageType.prefs);
-    final secureStrategy = await GStorageFactory.create(GStorageType.secure);
-
-    registerStrategy(GStorageType.prefs, prefsStrategy);
-    registerStrategy(GStorageType.secure, secureStrategy);
+    // 각 등록된 전략들을 초기화
+    for (final strategy in _strategies.values) {
+      await strategy.initialize();
+    }
+    _isInitialized = true;
   }
 
   @override
