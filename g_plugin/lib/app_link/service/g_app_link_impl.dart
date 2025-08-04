@@ -19,6 +19,10 @@ class GAppLinkImpl implements GAppLinkService {
   /// 딥링크 타입 매핑 (동적 설정)
   Map<String, DeepLinkTypeMatcher> _deepLinkTypes = {};
 
+  /// 등록된 리스너들
+  final Map<String, DeepLinkCallback> _listeners = {};
+  final Map<String, DeepLinkErrorCallback> _errorListeners = {};
+
   @override
   Future<void> initialize({
     required DeepLinkCallback onDeepLink,
@@ -58,11 +62,24 @@ class GAppLinkImpl implements GAppLinkService {
     await guardFuture(() async {
       final initialLink = await _appLinks?.getInitialLinkString();
       if (initialLink != null && initialLink.isNotEmpty) {
+        // 기본 콜백 호출
         _onDeepLink?.call(initialLink);
+
+        // 등록된 모든 리스너에게 알림
+        for (final listener in _listeners.values) {
+          listener(initialLink);
+        }
       }
     }, typeHandlers: {
       PlatformException: (e, s) {
-        _onError?.call('Initial link error: ${e.toString()}');
+        final errorMessage = 'Initial link error: ${e.toString()}';
+        // 기본 에러 콜백 호출
+        _onError?.call(errorMessage);
+
+        // 등록된 모든 에러 리스너에게 알림
+        for (final errorListener in _errorListeners.values) {
+          errorListener(errorMessage);
+        }
       },
     });
   }
@@ -75,11 +92,24 @@ class GAppLinkImpl implements GAppLinkService {
       (uri) {
         final link = uri.toString();
         if (link.isNotEmpty) {
+          // 기본 콜백 호출
           _onDeepLink?.call(link);
+
+          // 등록된 모든 리스너에게 알림
+          for (final listener in _listeners.values) {
+            listener(link);
+          }
         }
       },
       onError: (error) {
-        _onError?.call('Deep link stream error: $error');
+        final errorMessage = 'Deep link stream error: $error';
+        // 기본 에러 콜백 호출
+        _onError?.call(errorMessage);
+
+        // 등록된 모든 에러 리스너에게 알림
+        for (final errorListener in _errorListeners.values) {
+          errorListener(errorMessage);
+        }
       },
     );
   }
@@ -219,9 +249,53 @@ class GAppLinkImpl implements GAppLinkService {
   @override
   void handleDeepLink(String link) {
     if (isValidDeepLink(link)) {
+      // 기본 콜백 호출
       _onDeepLink?.call(link);
+
+      // 등록된 모든 리스너에게 알림
+      for (final listener in _listeners.values) {
+        listener(link);
+      }
     } else {
-      _onError?.call('Invalid deep link: $link');
+      final errorMessage = 'Invalid deep link: $link';
+      // 기본 에러 콜백 호출
+      _onError?.call(errorMessage);
+
+      // 등록된 모든 에러 리스너에게 알림
+      for (final errorListener in _errorListeners.values) {
+        errorListener(errorMessage);
+      }
+    }
+  }
+
+  @override
+  void listen({
+    required DeepLinkCallback onDeepLink,
+    DeepLinkErrorCallback? onError,
+    String? name,
+  }) {
+    final listenerName = name ?? 'default';
+    _listeners[listenerName] = onDeepLink;
+    if (onError != null) {
+      _errorListeners[listenerName] = onError;
+    }
+  }
+
+  @override
+  List<String> get registeredListeners {
+    return _listeners.keys.toList();
+  }
+
+  @override
+  void removeListener([String? name]) {
+    if (name == null) {
+      // 모든 리스너 제거
+      _listeners.clear();
+      _errorListeners.clear();
+    } else {
+      // 특정 리스너만 제거
+      _listeners.remove(name);
+      _errorListeners.remove(name);
     }
   }
 }

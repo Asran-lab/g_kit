@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
-import 'package:g_core/router/common/g_router_config.dart';
-import 'package:g_core/router/service/g_router_service.dart';
-import 'package:g_core/router/service/g_router_impl.dart';
+import 'package:g_core/router/router.dart';
 
 /// GRouter Facade 클래스
 /// 라우터 기능을 통합하여 제공하는 static 인터페이스
@@ -24,21 +22,23 @@ class GRouter {
   ///
   /// [configs] - 라우트 설정 목록
   /// [shellConfigs] - 쉘 라우트 설정 목록 (선택사항)
-  /// [initialPath] - 초기 경로 (기본값: '/')
-  static Future<void> initialize(
+  /// [initialPath] - 초기 경로 (기본값: '/splash')
+  static void initialize(
     List<GRouteConfig> configs, {
     List<GShellRouteConfig>? shellConfigs,
-    String initialPath = '/',
-  }) async {
+    String initialPath = '/splash',
+    bool enableLogging = true,
+    GRouterErrorHandler? errorHandler,
+  }) {
     _instance = GRouterImpl();
-    await _instance!.initialize(
+    _instance!.initialize(
       configs,
       shellConfigs: shellConfigs,
       initialPath: initialPath,
     );
   }
 
-  /// 지정된 경로로 이동 (push)
+  /// 지정된 경로로 이동
   ///
   /// [path] - 이동할 경로
   /// [arguments] - 전달할 인수
@@ -54,14 +54,6 @@ class GRouter {
     await instance.goNamed(name, arguments: arguments);
   }
 
-  /// 현재 경로를 새 경로로 교체
-  ///
-  /// [path] - 이동할 경로
-  /// [arguments] - 전달할 인수
-  static Future<void> replace(String path, {GJson? arguments}) async {
-    await instance.replace(path, arguments: arguments);
-  }
-
   /// 지정된 경로로 이동하고 이전 스택 제거
   ///
   /// [path] - 이동할 경로
@@ -75,43 +67,50 @@ class GRouter {
     await instance.goBack();
   }
 
-  /// 특정 경로까지 뒤로 가기
-  ///
-  /// [path] - 돌아갈 경로
-  static Future<void> goBackUntil(String path) async {
-    await instance.goBackUntil(path);
-  }
-
   /// 뒤로 갈 수 있는지 확인
   static Future<bool> canGoBack() async {
     return await instance.canGoBack();
   }
 
-  /// RouterConfig 반환
+  /// 스택에 페이지 push (뒤로가기로 복귀 가능)
+  static Future<void> replace(String path, {GJson? arguments}) async {
+    await instance.replace(path, arguments: arguments);
+  }
+
+  /// Router Widget 빌드
   ///
-  /// MaterialApp.router(routerConfig: GRouter.config) 형태로 사용
-  static RouterConfig<Object>? get config => instance.routerConfig;
-
-  /// 현재 경로 반환
-  static String get currentPath => instance.currentPath;
-
-  /// 현재 라우트 정보 반환
-  static RouteInformation? get currentRouteInformation =>
-      instance.currentRouteInformation;
-
-  /// 라우터 초기화 여부 확인
-  static bool get initialized => instance.isInitialized;
+  /// MaterialApp.router를 반환합니다.
+  ///
+  /// [colorConfig] - G_UI 색상 설정
+  /// [themeMode] - 테마 모드 (light/dark/system)
+  /// [brightness] - 밝기 설정
+  /// [theme] - 라이트 테마 (커스텀)
+  /// [locale] - 현재 로케일
+  /// [supportedLocales] - 지원하는 로케일 목록
+  /// [localizationsDelegates] - 로컬라이제이션 델리게이트
+  /// [debugShowCheckedModeBanner] - 디버그 배너 표시 여부
+  static Widget buildRouter({
+    ThemeMode? themeMode,
+    Brightness? brightness,
+    ThemeData? theme,
+    Locale? locale,
+    Iterable<Locale>? supportedLocales,
+    Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates,
+    bool? debugShowCheckedModeBanner,
+  }) {
+    return instance.buildRouter(
+      themeMode: themeMode,
+      brightness: brightness,
+      lightTheme: theme,
+      locale: locale,
+      supportedLocales: supportedLocales,
+      localizationsDelegates: localizationsDelegates,
+      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+    );
+  }
 
   /// Router 인스턴스 재설정 (테스트용)
   static void reset() {
     _instance = null;
-  }
-
-  /// Router 정리
-  static Future<void> dispose() async {
-    if (_instance != null) {
-      await _instance!.dispose();
-      _instance = null;
-    }
   }
 }

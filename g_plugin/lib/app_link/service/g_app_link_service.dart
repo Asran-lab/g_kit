@@ -8,6 +8,33 @@ typedef DeepLinkTypeMatcher = bool Function(String path);
 /// 딥링크 처리를 위한 기본 인터페이스를 정의합니다.
 /// 구현체는 각 플랫폼별 특성에 맞게 구현해야 합니다.
 abstract class GAppLinkService {
+  /// 딥링크 리스너 등록
+  ///
+  /// [onDeepLink] - 딥링크 수신 시 호출될 콜백
+  /// [onError] - 에러 발생 시 호출될 콜백 (선택사항)
+  /// [name] - 리스너 이름 (선택사항)
+  ///
+  /// ```dart
+  /// service.listen(
+  ///   onDeepLink: (link) => print('딥링크: $link'),
+  ///   onError: (error) => print('에러: $error'),
+  ///   name: 'main',
+  /// );
+  /// ```
+  void listen({
+    required DeepLinkCallback onDeepLink,
+    DeepLinkErrorCallback? onError,
+    String? name,
+  });
+
+  /// 딥링크 리스너 제거
+  ///
+  /// [name] - 제거할 리스너 이름 (null이면 모든 리스너 제거)
+  void removeListener([String? name]);
+
+  /// 등록된 리스너 목록 조회
+  List<String> get registeredListeners;
+
   /// 서비스 초기화
   /// 딥링크 리스닝을 시작합니다
   Future<void> initialize({

@@ -24,8 +24,8 @@ ColorScheme gColorScheme(
   final shadow = Colors.black87;
   final scrim = Colors.black87;
 
-  Color lighten(Color base, [double amt = .1]) => lighten(base, amt);
-  Color darken(Color base, [double amt = .1]) => darken(base, amt);
+  // Color lighten(Color base, [double amt = .1]) => lighten(base, amt);
+  // Color darken(Color base, [double amt = .1]) => darken(base, amt);
   Color on(Color base) => onColor(base);
 
   return ColorScheme(

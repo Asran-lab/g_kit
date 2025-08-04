@@ -36,7 +36,8 @@ class GAppLink {
   static GAppLinkInitializer _getInitializer(String? name) {
     final key = name ?? _defaultName;
     if (!_initializers.containsKey(key)) {
-      throw StateError('Initializer for "$key" not found. Please register it first using setCallbacks()');
+      throw StateError(
+          'Initializer for "$key" not found. Please register it first using setCallbacks()');
     }
     return _initializers[key]!;
   }
@@ -62,23 +63,22 @@ class GAppLink {
     Map<String, DeepLinkTypeMatcher>? deepLinkTypes,
   }) async {
     final key = name ?? _defaultName;
-    
+
     // 기존 초기화자가 있으면 먼저 정리
     if (_initializers.containsKey(key)) {
       await _initializers[key]!.dispose();
     }
-    
+
     // 새로운 초기화자 생성 및 등록
     _initializers[key] = GAppLinkInitializer(
       onDeepLink: onDeepLink,
       onError: onError,
       deepLinkTypes: deepLinkTypes,
     );
-    
+
     // 초기화 실행
     await _initializers[key]!.initialize();
   }
-
 
   /// 딥링크 파싱
   ///
@@ -210,6 +210,48 @@ class GAppLink {
       }
       _initializers.clear();
     }
+  }
+
+  /// 딥링크 리스너 등록
+  ///
+  /// [onDeepLink] - 딥링크 수신 시 호출될 콜백
+  /// [onError] - 에러 발생 시 호출될 콜백 (선택사항)
+  /// [name] - 리스너 이름 (선택사항)
+  /// [instanceName] - 인스턴스 이름 (선택사항)
+  ///
+  /// ```dart
+  /// GAppLink.listen(
+  ///   onDeepLink: (link) => print('딥링크: $link'),
+  ///   onError: (error) => print('에러: $error'),
+  ///   name: 'main',
+  /// );
+  /// ```
+  static void listen({
+    required DeepLinkCallback onDeepLink,
+    DeepLinkErrorCallback? onError,
+    String? name,
+    String? instanceName,
+  }) {
+    _getInitializer(instanceName).service.listen(
+          onDeepLink: onDeepLink,
+          onError: onError,
+          name: name,
+        );
+  }
+
+  /// 딥링크 리스너 제거
+  ///
+  /// [name] - 제거할 리스너 이름 (null이면 모든 리스너 제거)
+  /// [instanceName] - 인스턴스 이름 (선택사항)
+  static void removeListener([String? name, String? instanceName]) {
+    _getInitializer(instanceName).service.removeListener(name);
+  }
+
+  /// 등록된 리스너 목록 조회
+  ///
+  /// [instanceName] - 인스턴스 이름 (선택사항)
+  static List<String> getRegisteredListeners([String? instanceName]) {
+    return _getInitializer(instanceName).service.registeredListeners;
   }
 
   /// 서비스 재초기화

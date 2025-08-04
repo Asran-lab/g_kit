@@ -7,17 +7,15 @@ class GRouterInitializer extends GInitializer {
   final List<GRouteConfig>? configs;
   final List<GShellRouteConfig>? shellConfigs;
   final String initialPath;
-  final GRouterErrorHandler? errorHandler;
-  final GRouterRedirectHandler? redirectHandler;
   final bool enableLogging;
+  final GRouterErrorHandler? errorHandler;
 
   GRouterInitializer({
     this.configs,
     this.shellConfigs,
-    this.initialPath = '/',
-    this.errorHandler,
-    this.redirectHandler,
+    this.initialPath = '/splash',
     this.enableLogging = true,
+    this.errorHandler,
   });
 
   @override
@@ -25,15 +23,20 @@ class GRouterInitializer extends GInitializer {
 
   @override
   Future<void> initialize() async {
-    await guardFuture<void>(() async {
-      await GRouter.initialize(
-        configs ?? [],
-        shellConfigs: shellConfigs,
-        initialPath: initialPath,
-      );
-    }, onError: (e, s) {
-      Logger.e('Failed to initialize router', error: e);
-      throw e;
-    });
+    await guardFuture<void>(
+      () async {
+        GRouter.initialize(
+          configs ?? [],
+          shellConfigs: shellConfigs,
+          initialPath: initialPath,
+          enableLogging: enableLogging,
+          errorHandler: errorHandler,
+        );
+      },
+      onError: (e, s) {
+        Logger.e('Failed to initialize router', error: e);
+        throw e;
+      },
+    );
   }
 }
