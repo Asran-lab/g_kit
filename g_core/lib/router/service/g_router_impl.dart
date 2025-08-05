@@ -100,14 +100,14 @@ class GRouterImpl implements GRouterService {
   }
 
   @override
-  Future<void> go(String path, {GJson? arguments}) async => _goRouter.go(
+  Future<void> go(String path, {GJson? arguments}) async => _goRouter.push(
         path,
         extra: arguments,
       );
 
   @override
   Future<void> goNamed(String name, {GJson? arguments}) async =>
-      _goRouter.goNamed(name, extra: arguments);
+      _goRouter.pushNamed(name, extra: arguments);
 
   @override
   Future<void> goUntil(String path, {GJson? arguments}) async =>
@@ -124,7 +124,7 @@ class GRouterImpl implements GRouterService {
 
   @override
   Future<void> replace(String path, {GJson? arguments}) async =>
-      _goRouter.replace(path, extra: arguments);
+      _goRouter.go(path, extra: arguments);
 
   @override
   Widget buildRouter({
