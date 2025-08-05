@@ -32,7 +32,7 @@ class GRouterImpl implements GRouterService {
     // 일반 라우트 추가
     routes.addAll(_configs.map(
       (config) => GoRoute(
-        path: '/${config.path}',
+        path: config.path,
         name: config.name,
         pageBuilder: (context, state) {
           final arguments = state.extra as GJson?;
@@ -60,11 +60,33 @@ class GRouterImpl implements GRouterService {
     // 쉘 라우트 추가
     routes.addAll(_shellConfigs.map(
       (shellConfig) => ShellRoute(
-        builder: (context, state, child) => shellConfig.builder(context, child),
+        pageBuilder: (context, state, child) {
+          final selectedIndex = _getSelectedIndex(state);
+
+          // pageBuilder가 있으면 사용, 없으면 builder 사용
+          if (shellConfig.pageBuilder != null) {
+            return shellConfig.pageBuilder!(
+              context,
+              state,
+              child,
+              selectedIndex: selectedIndex,
+            );
+          } else {
+            final widget = shellConfig.builder!(
+              context,
+              child,
+              selectedIndex: selectedIndex,
+            );
+            return MaterialPage(
+              key: state.pageKey,
+              child: widget,
+            );
+          }
+        },
         routes: shellConfig.children
             .map(
               (childConfig) => GoRoute(
-                path: '/${childConfig.path}',
+                path: childConfig.path,
                 name: childConfig.name,
                 pageBuilder: (context, state) {
                   final arguments = state.extra as GJson?;
@@ -97,6 +119,24 @@ class GRouterImpl implements GRouterService {
       initialLocation: initialPath,
       routes: routes,
     );
+  }
+
+  /// 현재 선택된 인덱스를 반환합니다.
+  int _getSelectedIndex(GoRouterState state) {
+    // 현재 경로에 따라 동적으로 인덱스를 결정
+    final path = state.uri.path;
+
+    // shellConfig의 children에서 현재 경로와 매칭되는 인덱스를 찾음
+    for (final shellConfig in _shellConfigs) {
+      for (int i = 0; i < shellConfig.children.length; i++) {
+        final childConfig = shellConfig.children[i];
+        if (path.startsWith('/${childConfig.path}')) {
+          return i;
+        }
+      }
+    }
+
+    return 0; // 기본값
   }
 
   @override
