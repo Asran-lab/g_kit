@@ -59,6 +59,12 @@ class GShellRouteConfig {
   final GRedirect? redirect;
   final GRouteGuard? guard;
 
+  /// 라우트 이름과 인덱스 매핑 (선택적)
+  final Map<String, int>? routeNameToIndex;
+
+  /// 인덱스와 라우트 경로 매핑 (선택적)
+  final Map<int, String>? indexToRoutePath;
+
   GShellRouteConfig({
     required this.name,
     this.builder,
@@ -66,6 +72,29 @@ class GShellRouteConfig {
     required this.children,
     this.redirect,
     this.guard,
+    this.routeNameToIndex,
+    this.indexToRoutePath,
   }) : assert(builder != null || pageBuilder != null,
             'Either builder or pageBuilder must be provided');
+
+  /// 자동으로 매핑을 생성하는 getter
+  Map<String, int> get autoRouteNameToIndex {
+    if (routeNameToIndex != null) return routeNameToIndex!;
+
+    final mapping = <String, int>{};
+    for (int i = 0; i < children.length; i++) {
+      mapping[children[i].name] = i;
+    }
+    return mapping;
+  }
+
+  Map<int, String> get autoIndexToRoutePath {
+    if (indexToRoutePath != null) return indexToRoutePath!;
+
+    final mapping = <int, String>{};
+    for (int i = 0; i < children.length; i++) {
+      mapping[i] = '/${children[i].path}';
+    }
+    return mapping;
+  }
 }
