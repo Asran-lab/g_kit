@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: g_common,g_lib,g_model
+# melos_managed_dependency_overrides: g_common,g_lib,g_model,g_ui
 dependency_overrides:
   g_common:
     path: ../g_common
@@ -6,3 +6,5 @@ dependency_overrides:
     path: ../g_lib
   g_model:
     path: ../g_model
+  g_ui:
+    path: ../g_ui

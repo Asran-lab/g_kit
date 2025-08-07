@@ -17,3 +17,6 @@ export 'package:g_lib/g_lib_network.dart';
 
 // 라우팅 라이브러리
 export 'package:g_lib/g_lib_router.dart';
+
+// 이미지 라이브러리
+export 'package:g_lib/g_lib_image.dart';
