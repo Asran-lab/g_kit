@@ -1,5 +1,8 @@
 library;
 
+/* 앱 라이프사이클 */
+export 'app_lifecycle/app_lifecycle.dart';
+
 /* 스토리지 */
 export 'storage/storage.dart';
 

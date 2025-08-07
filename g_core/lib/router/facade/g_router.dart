@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
 import 'package:g_core/router/router.dart';
+import 'package:g_ui/configs/g_color_config.dart';
 
 /// GRouter Facade 클래스
 /// 라우터 기능을 통합하여 제공하는 static 인터페이스
@@ -90,6 +91,7 @@ class GRouter {
   /// [localizationsDelegates] - 로컬라이제이션 델리게이트
   /// [debugShowCheckedModeBanner] - 디버그 배너 표시 여부
   static Widget buildRouter({
+    GColorConfig? colorConfig,
     ThemeMode? themeMode,
     Brightness? brightness,
     ThemeData? theme,
@@ -99,9 +101,10 @@ class GRouter {
     bool? debugShowCheckedModeBanner,
   }) {
     return instance.buildRouter(
+      colorConfig: colorConfig,
       themeMode: themeMode,
       brightness: brightness,
-      lightTheme: theme,
+      themeData: theme,
       locale: locale,
       supportedLocales: supportedLocales,
       localizationsDelegates: localizationsDelegates,

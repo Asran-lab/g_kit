@@ -4,6 +4,7 @@ import 'package:g_common/g_common.dart';
 import 'package:g_core/router/service/g_router_service.dart';
 import 'package:g_core/router/common/g_router_config.dart';
 import 'package:g_lib/g_lib.dart';
+import 'package:g_ui/configs/g_color_config.dart' show GColorConfig;
 
 /// 라우터 서비스 구현체
 /// go_router를 사용하여 라우터를 관리합니다.
@@ -168,10 +169,10 @@ class GRouterImpl implements GRouterService {
 
   @override
   Widget buildRouter({
+    GColorConfig? colorConfig,
     ThemeMode? themeMode,
     Brightness? brightness,
-    ThemeData? lightTheme,
-    ThemeData? darkTheme,
+    ThemeData? themeData,
     Locale? locale,
     Iterable<Locale>? supportedLocales,
     Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates,
@@ -182,8 +183,7 @@ class GRouterImpl implements GRouterService {
       debugShowCheckedModeBanner: debugShowCheckedModeBanner ?? true,
 
       // 테마 설정
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: themeData,
       themeMode: themeMode ?? ThemeMode.system,
 
       // 로케일 설정
