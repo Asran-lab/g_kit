@@ -16,7 +16,7 @@ import 'g_logger.dart';
 Future<T> guardFuture<T>(
   Future<T> Function() task, {
   Map<Type, GExceptionHandler>? typeHandlers,
-  void Function(Object error, StackTrace stackTrace)? onError,
+  T Function(Object error, StackTrace stackTrace)? onError,
   void Function()? finallyBlock, // ✅ 추가
 }) async {
   try {

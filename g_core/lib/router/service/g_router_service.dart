@@ -6,6 +6,7 @@ import 'package:g_ui/configs/g_color_config.dart';
 /// 라우터 서비스 인터페이스
 /// Flutter의 표준 RouterConfig를 사용하여 라우터를 관리합니다.
 abstract class GRouterService {
+  GlobalKey<NavigatorState> get rootNavigatorKey;
   void initialize(
     List<GRouteConfig> configs, {
     List<GShellRouteConfig>? shellConfigs,
@@ -17,6 +18,11 @@ abstract class GRouterService {
   Future<void> goBack();
   Future<bool> canGoBack();
   Future<void> replace(String path, {GJson? arguments});
+  Future<T?> showFullscreenModal<T>(
+    Widget page, {
+    bool barrierDismissible = false,
+  });
+  void dismissModal<T extends Object?>([T? result]);
   Widget buildRouter({
     GColorConfig? colorConfig,
     ThemeMode? themeMode,

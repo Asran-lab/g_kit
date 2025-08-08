@@ -13,6 +13,10 @@ class GRouterImpl implements GRouterService {
   final List<GRouteConfig> _configs = [];
   final List<GShellRouteConfig> _shellConfigs = [];
   GoRouter get goRouter => _goRouter;
+  final GlobalKey<NavigatorState> _rootNavigatorKey =
+      GlobalKey<NavigatorState>();
+  @override
+  GlobalKey<NavigatorState> get rootNavigatorKey => _rootNavigatorKey;
 
   @override
   void initialize(
@@ -119,6 +123,7 @@ class GRouterImpl implements GRouterService {
     _goRouter = GoRouter(
       initialLocation: initialPath,
       routes: routes,
+      navigatorKey: _rootNavigatorKey,
     );
   }
 
@@ -191,5 +196,41 @@ class GRouterImpl implements GRouterService {
       supportedLocales: supportedLocales ?? const [Locale('ko', 'KR')],
       localizationsDelegates: localizationsDelegates,
     );
+  }
+
+  @override
+  Future<T?> showFullscreenModal<T>(
+    Widget page, {
+    bool barrierDismissible = false,
+  }) async {
+    final navigator = _rootNavigatorKey.currentState;
+    if (navigator == null) return null;
+    return showGeneralDialog<T>(
+      context: navigator.context,
+      barrierDismissible: barrierDismissible,
+      barrierLabel: 'modal',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 240),
+      pageBuilder: (context, anim, secondary) {
+        return PopScope(
+          canPop: barrierDismissible,
+          child: Material(
+            color: Colors.transparent,
+            child: page,
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondary, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    );
+  }
+
+  @override
+  void dismissModal<T extends Object?>([T? result]) {
+    final navigator = _rootNavigatorKey.currentState;
+    if (navigator?.canPop() ?? false) {
+      navigator!.pop<T>(result);
+    }
   }
 }

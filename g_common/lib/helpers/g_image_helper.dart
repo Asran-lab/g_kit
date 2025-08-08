@@ -21,6 +21,7 @@ class GImageHelper {
     double? scale,
     bool preserveColor = false,
     String fallbackAsset = '',
+    bool onLoading = false,
   }) {
     if (path.isEmpty) {
       return _buildErrorWidget(size, color, fit, fallbackAsset);
@@ -77,7 +78,16 @@ class GImageHelper {
         );
       }
 
-      /// 5. 일반 에셋 이미지
+      /// 5. Lottie 애니메이션
+      if (path.endsWith('.json') || path.endsWith('.lottie')) {
+        return LottieWidget(
+          path: path,
+          size: size ?? const Size(100, 100),
+          onLoading: onLoading,
+        );
+      }
+
+      /// 6. 일반 에셋 이미지
       return Image.asset(
         path,
         width: size?.width,
@@ -145,6 +155,41 @@ class GImageHelper {
         height: size?.height,
         fit: fit,
       );
+
+  /// ✅ 7. 이미지 캐시 정리
+  static void clearCache() {
+    _memoryCache.clear();
+    _currentCacheSize = 0;
+  }
+
+  /// ✅ 8. 전체 사이즈 이미지 렌더링
+  static Widget showFullSizeImage(
+    String path, {
+    Size? size,
+    int offset = 0,
+    Color? color,
+    bool onLoading = true,
+  }) {
+    return LayoutBuilder(
+      builder: (context, layout) {
+        return ConstrainedBox(
+          constraints: const BoxConstraints.expand(),
+          child: Container(
+            width: layout.maxWidth,
+            height: layout.maxHeight > offset
+                ? layout.maxHeight - offset
+                : double.infinity,
+            color: color ?? Colors.black.withValues(alpha: 0.4),
+            child: showImage(
+              path,
+              onLoading: onLoading,
+              size: size,
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   /// 에러 위젯 빌더
   static Widget _buildErrorWidget(
@@ -759,5 +804,81 @@ class _FileImageWidget extends StatelessWidget {
         return GImageHelper._buildErrorWidget(size, color, fit, fallbackAsset);
       },
     );
+  }
+}
+
+class LottieWidget extends StatefulWidget {
+  final String path;
+  final Size size;
+  final bool onLoading;
+
+  const LottieWidget({
+    super.key,
+    required this.path,
+    this.size = const Size(100, 100),
+    this.onLoading = false,
+  });
+
+  @override
+  State<LottieWidget> createState() => LottieWidgetState();
+}
+
+class LottieWidgetState extends State<LottieWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final g_image.LottieBuilder _lottieBuilder;
+  g_image.LottieDecoder? _decoder;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+
+    // Choose decoder for .lottie/.tgs if needed
+    final lowerPath = widget.path.toLowerCase();
+    if (lowerPath.endsWith('.tgs')) {
+      _decoder = g_image.LottieComposition.decodeGZip;
+    } else if (lowerPath.endsWith('.lottie')) {
+      _decoder = (bytes) => g_image.LottieComposition.decodeZip(
+            bytes,
+            filePicker: (files) {
+              // Prefer animations/*.json inside the archive
+              for (final f in files) {
+                final name = f.name.toLowerCase();
+                if (name.startsWith('animations/') && name.endsWith('.json')) {
+                  return f;
+                }
+              }
+              // Fallback: first json file
+              for (final f in files) {
+                if (f.name.toLowerCase().endsWith('.json')) return f;
+              }
+              return files.first;
+            },
+          );
+    }
+    _lottieBuilder = g_image.LottieBuilder.asset(
+      widget.path,
+      controller: _animationController,
+      onLoaded: (composition) {
+        _animationController
+          ..duration = composition.duration
+          ..repeat();
+      },
+      width: widget.size.width,
+      height: widget.size.height,
+      decoder: _decoder,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: _lottieBuilder);
   }
 }

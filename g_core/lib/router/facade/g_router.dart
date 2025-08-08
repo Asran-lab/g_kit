@@ -112,6 +112,26 @@ class GRouter {
     );
   }
 
+  /// Root NavigatorKey 노출 (모달 제어 등 루트 네비게이터 접근용)
+  static GlobalKey<NavigatorState> get rootNavigatorKey =>
+      instance.rootNavigatorKey;
+
+  /// 전체 화면 모달 표시
+  static Future<T?> showFullscreenModal<T>(
+    Widget page, {
+    bool barrierDismissible = false,
+  }) async {
+    return instance.showFullscreenModal<T>(
+      page,
+      barrierDismissible: barrierDismissible,
+    );
+  }
+
+  /// 모달 닫기
+  static void dismissModal<T extends Object?>([T? result]) {
+    instance.dismissModal<T>(result);
+  }
+
   /// Router 인스턴스 재설정 (테스트용)
   static void reset() {
     _instance = null;
