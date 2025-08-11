@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^2.1.5          # 파일 경로 관련
   app_links: ^6.4.0              # 앱 링크 관련
   crypto: ^3.0.6                 # 해시 관련
+  device_info_plus: ^11.5.0      # 기기 정보 관련
 
   # 인증 라이브러리
   local_auth: ^2.3.0             # 생체 인식 관련

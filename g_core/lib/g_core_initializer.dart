@@ -6,6 +6,7 @@ class GCoreInitializer {
   final List<GInitializer> _initializers;
   GCoreInitializer(this._initializers);
 
+
   Future<void> initializeAll() async {
     for (final initializer in _initializers) {
       await guardFuture<void>(

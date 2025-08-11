@@ -1,5 +1,8 @@
 library;
 
+/* 인증 */
+export 'auth/auth.dart';
+
 /* 앱 라이프사이클 */
 export 'app_lifecycle/app_lifecycle.dart';
 

@@ -14,13 +14,21 @@ String _bytesToHex(List<int> bytes) {
 }
 
 /// v4 UUID 생성
-/// ex) GUuidHelper.generate()
+/// ex) GUuid.generate()
+class GUuid {
+  static String generate() {
+    final bytes = List<int>.generate(16, (_) => _random.nextInt(256));
+
+    // RFC 4122 compliance
+    bytes[6] = (bytes[6] & 0x0F) | 0x40; // Version 4
+    bytes[8] = (bytes[8] & 0x3F) | 0x80; // Variant 10
+
+    return _bytesToHex(bytes);
+  }
+}
+
+/// v4 UUID 생성
+/// ex) generateUUID()
 String generateUUID() {
-  final bytes = List<int>.generate(16, (_) => _random.nextInt(256));
-
-  // RFC 4122 compliance
-  bytes[6] = (bytes[6] & 0x0F) | 0x40; // Version 4
-  bytes[8] = (bytes[8] & 0x3F) | 0x80; // Variant 10
-
-  return _bytesToHex(bytes);
+  return GUuid.generate();
 }
