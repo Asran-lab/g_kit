@@ -15,6 +15,7 @@ import 'package:g_model/auth/g_short_code.dart';
 class GShortCodeAuthStrategy implements GAuthStrategy {
   static const String _deviceKeyStorageKey = 'device_key';
   static const String _tokenStorageKey = 'auth_token';
+  static const String _shortCodeStorageKey = 'kUserCode';
 
   @override
   GAuthStrategyType get type => GAuthStrategyType.shortCode;
@@ -50,35 +51,43 @@ class GShortCodeAuthStrategy implements GAuthStrategy {
         );
       }
 
-      // 1단계: 디바이스 키 해시와 숏코드로 nonce 요청
-      final deviceKeyHash = _hashDeviceKey(_deviceKey!);
-      final nonceResult = await _requestNonce(shortCode, deviceKeyHash);
+      // API 연동 전까지는 mock 토큰으로 처리
+      try {
+        // 1단계: 디바이스 키 해시와 숏코드로 nonce 요청
+        final deviceKeyHash = _hashDeviceKey(_deviceKey!);
+        final nonceResult = await _requestNonce(shortCode, deviceKeyHash);
 
-      return nonceResult.fold(
-        (l) => GEither.left(l),
-        (nonceResponse) async {
-          // 2단계: nonce를 디바이스 키로 HMAC 서명
-          final signature = _signNonce(nonceResponse.nonce, _deviceKey!);
+        return nonceResult.fold(
+          (l) => _handleApiFailure(shortCode, l),
+          (nonceResponse) async {
+            // 2단계: nonce를 디바이스 키로 HMAC 서명
+            final signature = _signNonce(nonceResponse.nonce, _deviceKey!);
 
-          // 3단계: 서명으로 토큰 요청
-          final tokenResult = await _requestToken(
-            shortCode,
-            deviceKeyHash,
-            nonceResponse.nonce,
-            signature,
-          );
+            // 3단계: 서명으로 토큰 요청
+            final tokenResult = await _requestToken(
+              shortCode,
+              deviceKeyHash,
+              nonceResponse.nonce,
+              signature,
+            );
 
-          return tokenResult.fold(
-            (l) => GEither.left(l),
-            (token) async {
-              _currentToken = token;
-              // 토큰 저장
-              await _storeToken(token);
-              return GEither.right(token);
-            },
-          );
-        },
-      );
+            return tokenResult.fold(
+              (l) => _handleApiFailure(shortCode, l),
+              (token) async {
+                _currentToken = token;
+                // 토큰 저장
+                await _storeToken(token);
+                // 숏코드 저장
+                await _storeShortCode(shortCode);
+                return GEither.right(token);
+              },
+            );
+          },
+        );
+      } catch (e) {
+        // API 연동 전이므로 mock 토큰으로 처리
+        return _handleApiFailure(shortCode, GException(message: 'API not connected: $e'));
+      }
     } catch (e) {
       return GEither.left(
         GException(message: 'Sign in failed: $e'),
@@ -236,5 +245,37 @@ class GShortCodeAuthStrategy implements GAuthStrategy {
         Logger.w('Failed to store token: $e');
       },
     );
+  }
+
+  /// 숏코드 저장
+  Future<void> _storeShortCode(String shortCode) async {
+    await guardFuture(
+      () async {
+        await GStorage.set(key: _shortCodeStorageKey, value: shortCode, isSecure: true);
+      },
+      onError: (e, stackTrace) {
+        Logger.w('Failed to store short code: $e');
+      },
+    );
+  }
+
+  /// API 연동 전 mock 처리
+  Future<GEither<GException, GAuthToken>> _handleApiFailure(String shortCode, GException error) async {
+    Logger.w('API 연동 전이므로 mock 토큰으로 처리: ${error.message}');
+    
+    // Mock 토큰 생성
+    final mockToken = GAuthToken(
+      accessToken: 'mock_access_token_${shortCode}_${DateTime.now().millisecondsSinceEpoch}',
+      refreshToken: 'mock_refresh_token_${shortCode}_${DateTime.now().millisecondsSinceEpoch}',
+      userId: shortCode, // 숏코드를 userId로 사용
+    );
+
+    _currentToken = mockToken;
+    
+    // 토큰과 숏코드 저장
+    await _storeToken(mockToken);
+    await _storeShortCode(shortCode);
+    
+    return GEither.right(mockToken);
   }
 }
