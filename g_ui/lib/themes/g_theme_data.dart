@@ -20,11 +20,13 @@ ThemeData gThemeData(
   GColorConfig config, {
   Brightness brightness = Brightness.light,
   String? fontFamily,
+  List<ThemeExtension<dynamic>>? extensions,
 }) {
   return ThemeData(
     useMaterial3: true,
     brightness: brightness,
     fontFamily: fontFamily,
+    extensions: extensions,
     colorScheme: gColorScheme(config, brightness),
     textTheme: gTextTheme(config, fontFamily: fontFamily),
     inputDecorationTheme: gInputTheme(config),
