@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart' show Colors, HSLColor;
+import 'package:flutter/material.dart' show HSLColor;
 
 /* 색깔 가져오기 */
 Color getColor(String color) => Color(int.parse(color));
@@ -35,6 +35,9 @@ Color toColor(String hexColor) {
   return Color(int.parse(hexColor, radix: 16) + 0xFF000000);
 }
 
+/// 색상의 명도 계산
+double getLuminance(Color color) => color.computeLuminance();
+
 /* 색깔 변환 
 dart-define에서 동적으로 추출할 수 있음
 */
@@ -46,21 +49,50 @@ String toHex(Color color, {bool leadingHash = true}) {
 }
 
 /* 배경색에 따른 글자색 반환 */
-Color onColor(Color bg) =>
-    bg.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+/// 접근성을 고려한 대비색 계산 (개선된 버전)
+Color onColor(Color backgroundColor) {
+  final luminance = backgroundColor.computeLuminance();
+
+  // Material Design 3 가이드라인에 따른 임계값
+  if (luminance > 0.5) {
+    // 밝은 배경 -> 어두운 텍스트
+    return const Color(0xFF1D1B20); // Material Design 3 standard dark
+  } else {
+    // 어두운 배경 -> 밝은 텍스트
+    return const Color(0xFFFEF7FF); // Material Design 3 standard light
+  }
+}
 
 /* 색깔 어둡게 
 ex) darken(Color(0xFF000000), 0.1) -> Color(0xFF000000)
 */
-Color darken(Color color, [double amount = .1]) => HSLColor.fromColor(color)
-    .withLightness(
-        (HSLColor.fromColor(color).lightness - amount).clamp(0.0, 1.0))
-    .toColor();
+/// HSL 기반 색상 어둡게 만들기
+Color darken(Color color, double amount) {
+  final hsl = HSLColor.fromColor(color);
+  final lightness = (hsl.lightness - amount).clamp(0.0, 1.0);
+  return hsl.withLightness(lightness).toColor();
+}
 
 /* 색깔 밝게
 ex) lighten(Color(0xFF000000), 0.1) -> Color(0xFF000000) 
 */
-Color lighten(Color color, [double amount = .1]) => HSLColor.fromColor(color)
-    .withLightness(
-        (HSLColor.fromColor(color).lightness + amount).clamp(0.0, 1.0))
-    .toColor();
+/// HSL 기반 색상 밝게 만들기
+Color lighten(Color color, double amount) {
+  final hsl = HSLColor.fromColor(color);
+  final lightness = (hsl.lightness + amount).clamp(0.0, 1.0);
+  return hsl.withLightness(lightness).toColor();
+}
+
+/// 채도 조정
+Color saturate(Color color, double amount) {
+  final hsl = HSLColor.fromColor(color);
+  final saturation = (hsl.saturation + amount).clamp(0.0, 1.0);
+  return hsl.withSaturation(saturation).toColor();
+}
+
+/// 색조 회전
+Color shiftHue(Color color, double degrees) {
+  final hsl = HSLColor.fromColor(color);
+  final hue = (hsl.hue + degrees) % 360;
+  return hsl.withHue(hue).toColor();
+}
