@@ -178,6 +178,7 @@ class GRouterImpl implements GRouterService {
     ThemeMode? themeMode,
     Brightness? brightness,
     ThemeData? themeData,
+    ThemeData? darkThemeData,
     Locale? locale,
     Iterable<Locale>? supportedLocales,
     Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates,
@@ -189,6 +190,7 @@ class GRouterImpl implements GRouterService {
 
       // 테마 설정
       theme: themeData,
+      darkTheme: darkThemeData,
       themeMode: themeMode ?? ThemeMode.system,
 
       // 로케일 설정

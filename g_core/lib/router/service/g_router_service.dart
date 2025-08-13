@@ -28,6 +28,7 @@ abstract class GRouterService {
     ThemeMode? themeMode,
     Brightness? brightness,
     ThemeData? themeData,
+    ThemeData? darkThemeData,
     Locale? locale,
     Iterable<Locale>? supportedLocales,
     Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates,

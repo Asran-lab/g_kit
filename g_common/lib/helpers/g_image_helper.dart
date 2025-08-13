@@ -784,13 +784,17 @@ class _FileImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double? w = size?.width;
+    final double? h = size?.height;
+    final int? cacheW = (w != null && w.isFinite && w > 0) ? w.floor() : null;
+
     return Image.file(
       io.File(path),
-      width: size?.width,
-      height: size?.height,
+      width: (w != null && w.isFinite) ? w : null,
+      height: (h != null && h.isFinite) ? h : null,
       fit: fit,
       color: color,
-      cacheWidth: size?.width.toInt(),
+      cacheWidth: cacheW,
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) return child;
         return AnimatedOpacity(
