@@ -47,6 +47,9 @@ dependencies:
   image_picker: ^1.1.2            # 이미지 선택 관련
   image_cropper: ^9.1.0           # 이미지 크롭 관련
 
+  # STT 라이브러리
+  speech_to_text: ^7.3.0          # STT 라이브러리
+
 
 dev_dependencies:
   flutter_test:

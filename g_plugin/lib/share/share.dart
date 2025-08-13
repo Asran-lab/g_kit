@@ -11,4 +11,4 @@ export 'service/g_share_service.dart';
 export 'service/g_share_impl.dart';
 
 // Models
-export 'models/share_type.dart';
+export 'common/share_type.dart';

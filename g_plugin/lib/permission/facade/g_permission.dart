@@ -1,9 +1,9 @@
 import '../g_permission_initializer.dart';
 import '../service/g_permission_service.dart';
-import '../models/permission_type.dart';
-import '../models/permission_status.dart';
-import '../models/permission_request.dart';
-import '../models/permission_result.dart';
+import '../common/permission_type.dart';
+import '../common/permission_status.dart';
+import '../common/permission_request.dart';
+import '../common/permission_result.dart';
 
 /// 권한 모듈의 Facade 클래스
 ///

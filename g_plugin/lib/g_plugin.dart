@@ -13,3 +13,6 @@ export 'permission/permission.dart';
 
 /* 공유 */
 export 'share/share.dart';
+
+/* STT */
+export 'stt/stt.dart';

@@ -13,10 +13,10 @@ export 'service/permission_state_tracker_impl.dart';
 export 'service/permission_request_strategy_impl.dart';
 
 // Models
-export 'models/permission_type.dart';
-export 'models/permission_status.dart';
-export 'models/permission_request.dart';
-export 'models/permission_result.dart';
+export 'common/permission_type.dart';
+export 'common/permission_status.dart';
+export 'common/permission_request.dart';
+export 'common/permission_result.dart';
 
 // Platform
 export 'platform/permission_platform.dart';

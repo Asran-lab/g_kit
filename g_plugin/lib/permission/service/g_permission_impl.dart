@@ -1,8 +1,8 @@
 import 'package:g_common/utils/g_logger.dart' show Logger;
-import '../models/permission_type.dart';
-import '../models/permission_status.dart';
-import '../models/permission_request.dart';
-import '../models/permission_result.dart';
+import '../common/permission_type.dart';
+import '../common/permission_status.dart';
+import '../common/permission_request.dart';
+import '../common/permission_result.dart';
 import '../platform/permission_platform.dart';
 import '../platform/android_permission.dart';
 import '../platform/ios_permission.dart';

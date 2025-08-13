@@ -1,4 +1,4 @@
-import '../models/share_type.dart';
+import '../common/share_type.dart';
 
 /// 공유 서비스 추상 인터페이스
 ///

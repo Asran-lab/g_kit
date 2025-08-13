@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_lib/g_lib_plugin.dart' as g_lib;
-import '../models/share_type.dart';
+import '../common/share_type.dart';
 import 'g_share_service.dart';
 
 /// 공유 서비스 구현체

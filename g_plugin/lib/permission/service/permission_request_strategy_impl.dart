@@ -1,7 +1,7 @@
-import '../models/permission_type.dart';
-import '../models/permission_status.dart';
-import '../models/permission_request.dart';
-import '../models/permission_result.dart';
+import '../common/permission_type.dart';
+import '../common/permission_status.dart';
+import '../common/permission_request.dart';
+import '../common/permission_result.dart';
 import 'g_permission_service.dart';
 
 /// 권한 요청 전략 구현체

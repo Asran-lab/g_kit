@@ -1,5 +1,5 @@
 import '../g_share_initializer.dart';
-import '../models/share_type.dart';
+import '../common/share_type.dart';
 
 /// 공유 모듈의 Facade 클래스
 ///
