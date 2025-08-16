@@ -11,6 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  # Archive for ZIP compression
+  archive: ^4.0.7
+  
+  # HTTP for web downloads (already imported in foundation)
+  http: ^1.1.0
 
   g_lib:
     path: ../g_lib
