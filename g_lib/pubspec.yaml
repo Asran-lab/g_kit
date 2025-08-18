@@ -17,6 +17,9 @@ dependencies:
   app_links: ^6.4.0              # 앱 링크 관련
   crypto: ^3.0.6                 # 해시 관련
   device_info_plus: ^11.5.0      # 기기 정보 관련
+  webview_flutter: ^4.13.0       # 웹뷰 관련
+  url_launcher: ^6.3.2           # 링크 관련
+  
 
   # 인증 라이브러리
   local_auth: ^2.3.0             # 생체 인식 관련

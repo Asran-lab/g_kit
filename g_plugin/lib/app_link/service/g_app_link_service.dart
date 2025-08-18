@@ -3,6 +3,43 @@ typedef DeepLinkCallback = void Function(String link);
 typedef DeepLinkErrorCallback = void Function(String error);
 typedef DeepLinkTypeMatcher = bool Function(String path);
 
+/// 링크 프리뷰 메타데이터 모델
+class LinkPreviewData {
+  final String url;
+  final String? title;
+  final String? description;
+  final String? imageUrl;
+  final String? siteName;
+  final String? favicon;
+
+  const LinkPreviewData({
+    required this.url,
+    this.title,
+    this.description,
+    this.imageUrl,
+    this.siteName,
+    this.favicon,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'url': url,
+    'title': title,
+    'description': description,
+    'imageUrl': imageUrl,
+    'siteName': siteName,
+    'favicon': favicon,
+  };
+
+  factory LinkPreviewData.fromJson(Map<String, dynamic> json) => LinkPreviewData(
+    url: json['url'] ?? '',
+    title: json['title'],
+    description: json['description'],
+    imageUrl: json['imageUrl'],
+    siteName: json['siteName'],
+    favicon: json['favicon'],
+  );
+}
+
 /// 앱 링크 서비스 추상 클래스
 ///
 /// 딥링크 처리를 위한 기본 인터페이스를 정의합니다.
@@ -97,4 +134,22 @@ abstract class GAppLinkService {
   /// 강제로 딥링크 처리
   /// 테스트나 수동 딥링크 처리를 위해 사용
   void handleDeepLink(String link);
+
+  // === 링크 프리뷰 관련 메서드 ===
+
+  /// 링크에서 메타데이터 추출
+  /// URL을 분석하여 제목, 설명, 이미지 등의 메타데이터를 추출합니다
+  Future<LinkPreviewData?> extractLinkMetadata(String url);
+
+  /// 링크 프리뷰 캐시 클리어
+  /// 메모리에 저장된 링크 프리뷰 캐시를 모두 삭제합니다
+  void clearLinkPreviewCache();
+
+  /// 특정 URL의 캐시 제거
+  /// 지정된 URL의 캐시만 제거합니다
+  void removeLinkPreviewCache(String url);
+
+  /// 링크 프리뷰 캐시 크기 조회
+  /// 현재 메모리에 저장된 캐시 개수를 반환합니다
+  int get linkPreviewCacheSize;
 }

@@ -4,6 +4,7 @@ import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_model/initializer/g_initializer.dart';
 import 'service/g_app_link_service.dart';
 import 'service/g_app_link_impl.dart';
+import 'facade/g_app_link.dart';
 
 /// 앱 링크 초기화 클래스
 ///
@@ -48,7 +49,11 @@ class GAppLinkInitializer extends GInitializer {
         deepLinkTypes: deepLinkTypes,
       );
 
+      // Facade에 서비스 등록
+      GAppLink.registerService(_service!);
+      
       _isInitialized = true;
+      Logger.d('🔗 GAppLinkInitializer 초기화 및 Facade 등록 완료');
     }, typeHandlers: {
       PlatformException: (e, s) {
         Logger.e('GAppLinkInitializer initialize failed', error: e);
@@ -77,9 +82,14 @@ class GAppLinkInitializer extends GInitializer {
 
   Future<void> dispose() async {
     if (_service != null) {
+      // Facade에서 서비스 해제
+      GAppLink.unregisterService();
+      
       await _service!.dispose();
       _service = null;
     }
+    
     _isInitialized = false;
+    Logger.d('🔗 GAppLinkInitializer 정리 완료');
   }
 }
