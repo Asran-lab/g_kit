@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
 import 'package:g_core/router/service/g_router_service.dart';
 import 'package:g_core/router/common/g_router_config.dart';
+import 'package:g_core/router/common/g_route_typedef.dart';
 import 'package:g_lib/g_lib.dart';
 import 'package:g_ui/configs/g_color_config.dart' show GColorConfig;
 
@@ -23,6 +24,9 @@ class GRouterImpl implements GRouterService {
     List<GRouteConfig> configs, {
     List<GShellRouteConfig>? shellConfigs,
     String initialPath = '/splash',
+    bool enableLogging = true,
+    GRouterErrorHandler? errorHandler,
+    GRouterRedirectHandler? redirectHandler,
   }) {
     _configs.clear();
     _configs.addAll(configs);
@@ -124,6 +128,13 @@ class GRouterImpl implements GRouterService {
       initialLocation: initialPath,
       routes: routes,
       navigatorKey: _rootNavigatorKey,
+      errorBuilder: errorHandler != null
+          ? (context, state) =>
+              errorHandler(context, state.error ?? Exception('Unknown error'))
+          : null,
+      redirect: redirectHandler != null
+          ? (context, state) => redirectHandler(context, state.uri.path)
+          : null,
     );
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
-import 'package:g_core/router/router.dart';
+import 'package:g_core/router/common/g_route_typedef.dart';
+import 'package:g_core/router/router.dart'
+    hide GRouterErrorHandler, GRouterRedirectHandler;
 import 'package:g_ui/configs/g_color_config.dart';
 
 /// GRouter Facade 클래스
@@ -30,12 +32,15 @@ class GRouter {
     String initialPath = '/splash',
     bool enableLogging = true,
     GRouterErrorHandler? errorHandler,
+    GRouterRedirectHandler? redirectHandler,
   }) {
     _instance = GRouterImpl();
     _instance!.initialize(
       configs,
       shellConfigs: shellConfigs,
       initialPath: initialPath,
+      errorHandler: errorHandler,
+      redirectHandler: redirectHandler,
     );
   }
 

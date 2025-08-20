@@ -51,7 +51,7 @@ class GDialog extends StatelessWidget {
   final EdgeInsetsGeometry? actionsPadding;
   final double? width;
   final double? height;
-  final Color? backgroundColor;
+  final Color? backgroundColor, titleColor, contentColor;
   final ShapeBorder? shape;
   final bool scrollable;
   final bool barrierDismissible;
@@ -70,6 +70,8 @@ class GDialog extends StatelessWidget {
     this.width,
     this.height,
     this.backgroundColor,
+    this.titleColor,
+    this.contentColor,
     this.shape,
     this.scrollable = false,
     this.barrierDismissible = true,
@@ -99,6 +101,8 @@ class GDialog extends StatelessWidget {
     double? width,
     double? height,
     Color? backgroundColor,
+    Color? titleColor,
+    Color? contentColor,
     ShapeBorder? shape,
     bool scrollable = false,
     bool barrierDismissible = true,
@@ -120,6 +124,8 @@ class GDialog extends StatelessWidget {
         width: width,
         height: height,
         backgroundColor: backgroundColor,
+        titleColor: titleColor,
+        contentColor: contentColor,
         shape: shape,
         scrollable: scrollable,
         barrierDismissible: barrierDismissible,
@@ -139,6 +145,8 @@ class GDialog extends StatelessWidget {
     VoidCallback? onCancel,
     Color? confirmColor,
     Color? cancelColor,
+    Color? titleColor,
+    Color? contentColor,
     bool barrierDismissible = true,
     Color? barrierColor,
   }) {
@@ -149,6 +157,8 @@ class GDialog extends StatelessWidget {
       builder: (context) => GDialog(
         title: title,
         content: content,
+        titleColor: titleColor,
+        contentColor: contentColor,
         barrierDismissible: barrierDismissible,
         barrierColor: barrierColor,
         actions: [
@@ -182,6 +192,8 @@ class GDialog extends StatelessWidget {
     String buttonText = '확인',
     VoidCallback? onPressed,
     Color? buttonColor,
+    Color? titleColor,
+    Color? contentColor,
     bool barrierDismissible = true,
     Color? barrierColor,
   }) {
@@ -192,6 +204,8 @@ class GDialog extends StatelessWidget {
       builder: (context) => GDialog(
         title: title,
         content: content,
+        titleColor: titleColor,
+        contentColor: contentColor,
         barrierDismissible: barrierDismissible,
         barrierColor: barrierColor,
         actions: [
@@ -238,13 +252,12 @@ class GDialog extends StatelessWidget {
                     child: titleWidget ??
                         GText(
                           title!,
-                          style: context.theme.dialogTheme.titleTextStyle ??
-                              GTextStyle.get(
-                                size: GTextSize.x18,
-                                weight: GTextWeight.bold,
-                                color: context
-                                    .theme.dialogTheme.titleTextStyle?.color,
-                              ),
+                          color: titleColor ??
+                              context.theme.dialogTheme.titleTextStyle?.color,
+                          style: GTextStyle.get(
+                            size: GTextSize.x18,
+                            weight: GTextWeight.bold,
+                          ),
                         ),
                   ),
 
@@ -261,13 +274,14 @@ class GDialog extends StatelessWidget {
                         child: contentWidget ??
                             GText(
                               content!,
+                              color: contentColor ??
+                                  context.theme.dialogTheme.contentTextStyle
+                                      ?.color,
                               style:
                                   context.theme.dialogTheme.contentTextStyle ??
                                       GTextStyle.get(
                                         size: GTextSize.x14,
                                         weight: GTextWeight.regular,
-                                        color: context.theme.dialogTheme
-                                            .contentTextStyle?.color,
                                       ),
                             ),
                       ),
@@ -304,6 +318,8 @@ class GConfirmDialog extends StatelessWidget {
   final VoidCallback? onCancel;
   final Color? confirmColor;
   final Color? cancelColor;
+  final Color? titleColor;
+  final Color? contentColor;
   final bool barrierDismissible;
   final Color? barrierColor;
 
@@ -317,6 +333,8 @@ class GConfirmDialog extends StatelessWidget {
     this.onCancel,
     this.confirmColor,
     this.cancelColor,
+    this.titleColor,
+    this.contentColor,
     this.barrierDismissible = true,
     this.barrierColor,
   });
@@ -332,6 +350,8 @@ class GConfirmDialog extends StatelessWidget {
     VoidCallback? onCancel,
     Color? confirmColor,
     Color? cancelColor,
+    Color? titleColor,
+    Color? contentColor,
     bool barrierDismissible = true,
     Color? barrierColor,
   }) {
@@ -348,6 +368,8 @@ class GConfirmDialog extends StatelessWidget {
         onCancel: onCancel,
         confirmColor: confirmColor,
         cancelColor: cancelColor,
+        titleColor: titleColor,
+        contentColor: contentColor,
         barrierDismissible: barrierDismissible,
         barrierColor: barrierColor,
       ),
@@ -369,14 +391,24 @@ class GConfirmDialog extends StatelessWidget {
                 context.theme.textTheme.bodyMedium?.color
                     ?.withValues(alpha: 0.6),
           ),
-          child: GText(cancelText, style: context.theme.textTheme.bodyMedium),
+          child: GText(
+            cancelText,
+            color: cancelColor ??
+                context.theme.textTheme.bodyMedium?.color
+                    ?.withValues(alpha: 0.6),
+            style: context.theme.textTheme.bodyMedium,
+          ),
         ),
         TextButton(
           onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
           style: TextButton.styleFrom(
             foregroundColor: confirmColor ?? context.primary,
           ),
-          child: GText(confirmText, style: context.theme.textTheme.bodyMedium),
+          child: GText(
+            confirmText,
+            color: confirmColor ?? context.primary,
+            style: context.theme.textTheme.bodyMedium,
+          ),
         ),
       ],
     );
@@ -390,6 +422,8 @@ class GAlertDialog extends StatelessWidget {
   final String buttonText;
   final VoidCallback? onPressed;
   final Color? buttonColor;
+  final Color? titleColor;
+  final Color? contentColor;
   final bool barrierDismissible;
   final Color? barrierColor;
 
@@ -400,6 +434,8 @@ class GAlertDialog extends StatelessWidget {
     this.buttonText = '확인',
     this.onPressed,
     this.buttonColor,
+    this.titleColor,
+    this.contentColor,
     this.barrierDismissible = true,
     this.barrierColor,
   });
@@ -412,6 +448,8 @@ class GAlertDialog extends StatelessWidget {
     String buttonText = '확인',
     VoidCallback? onPressed,
     Color? buttonColor,
+    Color? titleColor,
+    Color? contentColor,
     bool barrierDismissible = true,
     Color? barrierColor,
   }) {
@@ -425,6 +463,8 @@ class GAlertDialog extends StatelessWidget {
         buttonText: buttonText,
         onPressed: onPressed,
         buttonColor: buttonColor,
+        titleColor: titleColor,
+        contentColor: contentColor,
         barrierDismissible: barrierDismissible,
         barrierColor: barrierColor,
       ),
@@ -438,13 +478,19 @@ class GAlertDialog extends StatelessWidget {
       content: content,
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
+      titleColor: titleColor,
+      contentColor: contentColor,
       actions: [
         TextButton(
           onPressed: onPressed ?? () => Navigator.of(context).pop(),
           style: TextButton.styleFrom(
             foregroundColor: buttonColor ?? context.primary,
           ),
-          child: GText(buttonText, style: context.theme.textTheme.bodyMedium),
+          child: GText(
+            buttonText,
+            color: buttonColor ?? context.primary,
+            style: context.theme.textTheme.bodyMedium,
+          ),
         ),
       ],
     );

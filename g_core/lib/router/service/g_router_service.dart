@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g_common/g_common.dart';
+import 'package:g_core/router/common/g_route_typedef.dart';
 import 'package:g_core/router/common/g_router_config.dart';
 import 'package:g_ui/configs/g_color_config.dart';
 
@@ -11,6 +12,9 @@ abstract class GRouterService {
     List<GRouteConfig> configs, {
     List<GShellRouteConfig>? shellConfigs,
     String initialPath = '/splash',
+    bool enableLogging = true,
+    GRouterErrorHandler? errorHandler,
+    GRouterRedirectHandler? redirectHandler,
   });
   Future<void> go(String path, {GJson? arguments});
   Future<void> goNamed(String name, {GJson? arguments});

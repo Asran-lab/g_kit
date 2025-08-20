@@ -9,6 +9,7 @@ class GRouterInitializer extends GInitializer {
   final String initialPath;
   final bool enableLogging;
   final GRouterErrorHandler? errorHandler;
+  final GRouterRedirectHandler? redirectHandler;
 
   GRouterInitializer({
     this.configs,
@@ -16,6 +17,7 @@ class GRouterInitializer extends GInitializer {
     this.initialPath = '/splash',
     this.enableLogging = true,
     this.errorHandler,
+    this.redirectHandler,
   });
 
   @override
@@ -31,6 +33,7 @@ class GRouterInitializer extends GInitializer {
           initialPath: initialPath,
           enableLogging: enableLogging,
           errorHandler: errorHandler,
+          redirectHandler: redirectHandler,
         );
       },
       onError: (e, s) {
