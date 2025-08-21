@@ -128,6 +128,7 @@ class GRouterImpl implements GRouterService {
       initialLocation: initialPath,
       routes: routes,
       navigatorKey: _rootNavigatorKey,
+      debugLogDiagnostics: false, // 중복 키 로그 방지
       errorBuilder: errorHandler != null
           ? (context, state) =>
               errorHandler(context, state.error ?? Exception('Unknown error'))
