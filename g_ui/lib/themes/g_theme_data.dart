@@ -36,6 +36,7 @@ ThemeData gThemeData(
     outlinedButtonTheme:
         OutlinedButtonThemeData(style: GButtonTheme.outlined(config)),
     textButtonTheme: TextButtonThemeData(style: GButtonTheme.text(config)),
+    dividerTheme: gDividerTheme(config, brightness),
   );
 }
 
@@ -52,6 +53,7 @@ extension ThemeDataCopyWith on ThemeData {
     ElevatedButtonThemeData? elevatedButtonTheme,
     OutlinedButtonThemeData? outlinedButtonTheme,
     TextButtonThemeData? textButtonTheme,
+    DividerThemeData? dividerTheme,
   }) {
     return ThemeData(
       useMaterial3: useMaterial3 ?? this.useMaterial3,
@@ -63,6 +65,7 @@ extension ThemeDataCopyWith on ThemeData {
       elevatedButtonTheme: elevatedButtonTheme ?? this.elevatedButtonTheme,
       outlinedButtonTheme: outlinedButtonTheme ?? this.outlinedButtonTheme,
       textButtonTheme: textButtonTheme ?? this.textButtonTheme,
+      dividerTheme: dividerTheme ?? this.dividerTheme,
     );
   }
 }
