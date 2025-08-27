@@ -19,6 +19,8 @@ class GNetworkContext {
   GNetworkContext({
     GHttpNetworkStrategy? httpStrategy,
     GSocketNetworkStrategy? socketStrategy,
+    HttpNetworkOption? httpOption,
+    SocketNetworkOption? socketOption,
   }) {
     // 기본 전략들 등록
     if (httpStrategy != null) {

@@ -101,7 +101,7 @@ class GNetworkInitializer extends GInitializer {
     Logger.d('✅ Socket strategy registered');
 
     // 기본 전략 설정
-    _context!.switchTo(type: GNetworkType.http);
+    _context!.switchTo(type: _type ?? GNetworkType.http);
     Logger.d('✅ Default strategy set to HTTP');
   }
 
