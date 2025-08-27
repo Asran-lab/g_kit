@@ -32,38 +32,36 @@ class GNetworkInitializer extends GInitializer {
 
   @override
   Future<void> initialize() async {
-    await globalLock(() async {
-      if (_isInitialized) {
-        Logger.d('🔄 Network already initialized, skipping...');
-        return;
-      }
+    if (_isInitialized) {
+      Logger.d('🔄 Network already initialized, skipping...');
+      return;
+    }
 
-      await guardFuture<void>(() async {
-        Logger.i('🚀 Initializing GNetwork...');
+    await guardFuture<void>(() async {
+      Logger.i('🚀 Initializing GNetwork...');
 
-        try {
-          // 컨텍스트 생성
-          _context = _createContext();
+      try {
+        // 컨텍스트 생성
+        _context = _createContext();
 
-          // 전략 등록
-          await _registerStrategies();
+        // 전략 등록
+        await _registerStrategies();
 
-          // 자동 연결 설정
-          if (_autoConnect) {
-            await _setupAutoConnect();
-          }
-
-          // Facade 초기화
-          // _initializeFacade();
-
-          _isInitialized = true;
-          Logger.i('✅ GNetwork initialized successfully');
-        } catch (e, stackTrace) {
-          Logger.e('❌ Failed to initialize GNetwork: $e');
-          Logger.e('Stack trace: $stackTrace');
-          rethrow;
+        // 자동 연결 설정
+        if (_autoConnect) {
+          await _setupAutoConnect();
         }
-      });
+
+        // Facade 초기화
+        _initializeFacade();
+
+        _isInitialized = true;
+        Logger.i('✅ GNetwork initialized successfully');
+      } catch (e, stackTrace) {
+        Logger.e('❌ Failed to initialize GNetwork: $e');
+        Logger.e('Stack trace: $stackTrace');
+        rethrow;
+      }
     });
   }
 
@@ -88,41 +86,31 @@ class GNetworkInitializer extends GInitializer {
 
   /// 모든 전략 등록
   Future<void> _registerAllStrategies() async {
-    Logger.d('📡 Registering all network strategies...');
-
     // HTTP 전략 등록
     final httpStrategy = GNetworkFactory.createHttpStrategy(_httpOptions);
     _context!.registerStrategy(GNetworkType.http, httpStrategy);
-    Logger.d('✅ HTTP strategy registered');
 
     // Socket 전략 등록
     final socketStrategy = GNetworkFactory.createSocketStrategy(_socketOptions);
     _context!.registerStrategy(GNetworkType.socket, socketStrategy);
-    Logger.d('✅ Socket strategy registered');
 
     // 기본 전략 설정
-    _context!.switchTo(type: _type ?? GNetworkType.http);
-    Logger.d('✅ Default strategy set to HTTP');
+    await _context!.switchTo(type: _type ?? GNetworkType.http);
   }
 
   /// 특정 전략만 등록
   Future<void> _registerSpecificStrategy(GNetworkType type) async {
-    Logger.d('📡 Registering specific strategy: $type');
-
     switch (type) {
       case GNetworkType.http:
         final httpStrategy = GNetworkFactory.createHttpStrategy(_httpOptions);
         _context!.registerStrategy(GNetworkType.http, httpStrategy);
-        _context!.switchTo(type: GNetworkType.http);
-        Logger.d('✅ HTTP strategy registered and set as default');
+        await _context!.switchTo(type: GNetworkType.http);
         break;
 
       case GNetworkType.socket:
-        final socketStrategy =
-            GNetworkFactory.createSocketStrategy(_socketOptions);
+        final socketStrategy = GNetworkFactory.createSocketStrategy(_socketOptions);
         _context!.registerStrategy(GNetworkType.socket, socketStrategy);
-        _context!.switchTo(type: GNetworkType.socket);
-        Logger.d('✅ Socket strategy registered and set as default');
+        await _context!.switchTo(type: GNetworkType.socket);
         break;
     }
   }
@@ -130,8 +118,6 @@ class GNetworkInitializer extends GInitializer {
   /// 자동 연결 설정
   Future<void> _setupAutoConnect() async {
     if (_type == GNetworkType.socket || _type == null) {
-      Logger.d('🔌 Setting up auto-connect for socket...');
-
       // Socket 자동 연결 시도
       await guardFuture(() async {
         await _context!.connect();
@@ -150,7 +136,6 @@ class GNetworkInitializer extends GInitializer {
       httpOptions: _httpOptions,
       socketOptions: _socketOptions,
     );
-    Logger.d('✅ Facade initialized');
   }
 
   /// 컨텍스트 가져오기

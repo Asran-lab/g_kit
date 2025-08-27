@@ -19,20 +19,13 @@ class GNetworkContext {
   GNetworkContext({
     GHttpNetworkStrategy? httpStrategy,
     GSocketNetworkStrategy? socketStrategy,
-    HttpNetworkOption? httpOption,
-    SocketNetworkOption? socketOption,
   }) {
-    // 기본 전략들 등록
-    // if (httpStrategy != null) {
-    //   registerStrategy(GNetworkType.http, httpStrategy);
-    // }
-    // if (socketStrategy != null) {
-    //   registerStrategy(GNetworkType.socket, socketStrategy);
-    // }
-    _strategies[GNetworkType.http] =
-        httpStrategy ?? GHttpNetworkStrategy(httpOption);
-    _strategies[GNetworkType.socket] =
-        socketStrategy ?? GSocketNetworkStrategy(socketOption);
+    if (httpStrategy != null) {
+      registerStrategy(GNetworkType.http, httpStrategy);
+    }
+    if (socketStrategy != null) {
+      registerStrategy(GNetworkType.socket, socketStrategy);
+    }
   }
 
   /// 전략 등록

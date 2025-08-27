@@ -21,17 +21,15 @@ class GNetworkFactory {
   static GNetworkContext createContext({
     HttpNetworkOption? httpOptions,
     SocketNetworkOption? socketOptions,
-    GHttpNetworkStrategy? httpStrategy,
-    GSocketNetworkStrategy? socketStrategy,
   }) {
-    // final httpStrategy = createHttpStrategy(httpOptions);
-    // final socketStrategy = createSocketStrategy(socketOptions);
+    final httpStrategy =
+        httpOptions != null ? createHttpStrategy(httpOptions) : null;
+    final socketStrategy =
+        socketOptions != null ? createSocketStrategy(socketOptions) : null;
 
     return GNetworkContext(
       httpStrategy: httpStrategy,
       socketStrategy: socketStrategy,
-      httpOption: httpOptions,
-      socketOption: socketOptions,
     );
   }
 
