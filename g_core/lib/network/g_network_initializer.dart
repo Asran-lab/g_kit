@@ -54,7 +54,7 @@ class GNetworkInitializer extends GInitializer {
           }
 
           // Facade 초기화
-          _initializeFacade();
+          // _initializeFacade();
 
           _isInitialized = true;
           Logger.i('✅ GNetwork initialized successfully');

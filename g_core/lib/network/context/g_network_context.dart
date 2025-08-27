@@ -23,12 +23,16 @@ class GNetworkContext {
     SocketNetworkOption? socketOption,
   }) {
     // 기본 전략들 등록
-    if (httpStrategy != null) {
-      registerStrategy(GNetworkType.http, httpStrategy);
-    }
-    if (socketStrategy != null) {
-      registerStrategy(GNetworkType.socket, socketStrategy);
-    }
+    // if (httpStrategy != null) {
+    //   registerStrategy(GNetworkType.http, httpStrategy);
+    // }
+    // if (socketStrategy != null) {
+    //   registerStrategy(GNetworkType.socket, socketStrategy);
+    // }
+    _strategies[GNetworkType.http] =
+        httpStrategy ?? GHttpNetworkStrategy(httpOption);
+    _strategies[GNetworkType.socket] =
+        socketStrategy ?? GSocketNetworkStrategy(socketOption);
   }
 
   /// 전략 등록
