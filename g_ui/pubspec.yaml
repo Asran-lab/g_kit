@@ -13,7 +13,10 @@ dependencies:
     sdk: flutter
   
   g_common:
-    path: ../g_common
+    git:
+      url: git@github.com:Asran-lab/g_kit.git
+      path: g_common
+      ref: main
 
 dev_dependencies:
   flutter_test:

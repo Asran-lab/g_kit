@@ -16,16 +16,28 @@ dependencies:
   crypto: ^3.0.3
 
   g_lib:
-    path: ../g_lib
+    git:
+      url: git@github.com:Asran-lab/g_kit.git
+      path: g_lib
+      ref: main
   
   g_common:
-    path: ../g_common
+    git:
+      url: git@github.com:Asran-lab/g_kit.git
+      path: g_common
+      ref: main
   
   g_model:
-    path: ../g_model
+    git:
+      url: git@github.com:Asran-lab/g_kit.git
+      path: g_model
+      ref: main
 
   g_ui:
-    path: ../g_ui
+    git:
+      url: git@github.com:Asran-lab/g_kit.git
+      path: g_ui
+      ref: main
 
 dev_dependencies:
   flutter_test:
