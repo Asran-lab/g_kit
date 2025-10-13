@@ -16,3 +16,6 @@ export 'share/share.dart';
 
 /* STT */
 export 'stt/stt.dart';
+
+/* 홈 위젯 */
+export 'home_widget/home_widget.dart';
