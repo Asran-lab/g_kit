@@ -53,6 +53,12 @@ dependencies:
   # STT 라이브러리
   speech_to_text: ^7.3.0          # STT 라이브러리
 
+  # WorkManager 라이브러리
+  workmanager: ^0.9.0+3           # 백그라운드 업데이트 관련
+
+  # Home Widget 라이브러리
+  home_widget: ^0.8.0             # 홈 위젯 관련
+
 
 dev_dependencies:
   flutter_test:

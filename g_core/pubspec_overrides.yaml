@@ -1,22 +1,10 @@
 # melos_managed_dependency_overrides: g_common,g_lib,g_model,g_ui
 dependency_overrides:
   g_common:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_common
-      ref: main
+    path: ../g_common
   g_lib:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_lib
-      ref: main
+    path: ../g_lib
   g_model:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_model
-      ref: main
+    path: ../g_model
   g_ui:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_ui
-      ref: main
+    path: ../g_ui
