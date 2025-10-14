@@ -13,3 +13,4 @@ export 'g_route_observer.dart';
 export 'g_resolve_strategy.dart';
 export 'g_theme_mode_manager.dart';
 export 'g_image_picker.dart';
+export 'g_device_info.dart';

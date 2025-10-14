@@ -116,3 +116,4 @@ await GHomeWidget.renderFlutterWidget(
 - `g_common`: 유틸리티 함수들
 - `g_model`: 초기화 시스템
 
+
