@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_model/initializer/g_initializer.dart';
