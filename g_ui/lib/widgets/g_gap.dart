@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 /// Column(
 ///   children: [
 ///     Text('First widget'),
-///     GGap(16), // 16px vertical gap
+///     Gap(16), // 16px vertical gap
 ///     Text('Second widget'),
 ///   ],
 /// )
 /// ```
-class GGap extends StatelessWidget {
+class Gap extends StatelessWidget {
   /// The size of the gap
   final double size;
 
-  const GGap(this.size, {super.key});
+  const Gap(this.size, {super.key});
 
   @override
   Widget build(BuildContext context) {
