@@ -115,3 +115,4 @@ await GHomeWidget.renderFlutterWidget(
 - `workmanager`: 백그라운드 업데이트 (Android)
 - `g_common`: 유틸리티 함수들
 - `g_model`: 초기화 시스템
+
