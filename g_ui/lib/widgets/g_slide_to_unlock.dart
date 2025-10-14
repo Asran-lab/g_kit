@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:g_ui/configs/g_text_config.dart';
 import 'package:g_ui/widgets/g_text.dart';
 
-class GSlideToUnlockButton extends StatefulWidget {
+class GSlideToUnlock extends StatefulWidget {
   final String text;
   final VoidCallback? onSlideComplete;
   final bool isLoading;
   final Color primaryColor;
   final Color secondaryColor;
 
-  const GSlideToUnlockButton({
+  const GSlideToUnlock({
     super.key,
     required this.text,
     this.onSlideComplete,
@@ -19,10 +19,10 @@ class GSlideToUnlockButton extends StatefulWidget {
   });
 
   @override
-  State<GSlideToUnlockButton> createState() => GSlideToUnlockButtonState();
+  State<GSlideToUnlock> createState() => GSlideToUnlockState();
 }
 
-class GSlideToUnlockButtonState extends State<GSlideToUnlockButton>
+class GSlideToUnlockState extends State<GSlideToUnlock>
     with TickerProviderStateMixin {
   late AnimationController _slideController;
   late AnimationController _shimmerController;
@@ -91,7 +91,7 @@ class GSlideToUnlockButtonState extends State<GSlideToUnlockButton>
   }
 
   @override
-  void didUpdateWidget(GSlideToUnlockButton oldWidget) {
+  void didUpdateWidget(GSlideToUnlock oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isLoading && !oldWidget.isLoading) {
       _startProgressAnimation();
