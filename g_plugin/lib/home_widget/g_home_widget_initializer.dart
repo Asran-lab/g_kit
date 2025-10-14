@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_model/initializer/g_initializer.dart';
+import 'package:g_lib/g_lib_plugin.dart';
+import 'package:workmanager/workmanager.dart';
 import 'service/g_home_widget_service.dart';
 import 'service/g_home_widget_impl.dart';
 import 'facade/g_home_widget.dart';
-import 'package:g_lib/g_lib_plugin.dart';
 
 /// HomeWidget 초기화 클래스
 ///
