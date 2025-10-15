@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_common/utils/g_logger.dart' show Logger;
 import 'package:g_model/initializer/g_initializer.dart';
 import 'service/g_home_widget_service.dart';
 import 'service/g_home_widget_impl.dart';
 import 'facade/g_home_widget.dart';
-import 'package:g_lib/g_lib_plugin.dart';
+// import 'package:g_lib/g_lib_plugin.dart';
 
 /// HomeWidget 초기화 클래스
 ///
@@ -57,7 +56,7 @@ class GHomeWidgetInitializer extends GInitializer {
 
       // WorkManager 초기화 (Android에서 백그라운드 업데이트용)
       if (Platform.isAndroid && enableBackgroundUpdates) {
-        await _initializeWorkManager();
+        // await _initializeWorkManager();
       }
 
       _isInitialized = true;
@@ -70,17 +69,17 @@ class GHomeWidgetInitializer extends GInitializer {
     });
   }
 
-  /// WorkManager 초기화 (Android 백그라운드 업데이트용)
-  Future<void> _initializeWorkManager() async {
-    try {
-      await Workmanager().initialize(
-        _callbackDispatcher,
-      );
-      Logger.d('🏠 WorkManager 초기화 완료');
-    } catch (e) {
-      Logger.w('🏠 WorkManager 초기화 실패 (무시): $e');
-    }
-  }
+  // /// WorkManager 초기화 (Android 백그라운드 업데이트용)
+  // Future<void> _initializeWorkManager() async {
+  //   try {
+  //     // await Workmanager().initialize(
+  //     //   _callbackDispatcher,
+  //     // );
+  //     Logger.d('🏠 WorkManager 초기화 완료');
+  //   } catch (e) {
+  //     Logger.w('🏠 WorkManager 초기화 실패 (무시): $e');
+  //   }
+  // }
 
   /// 백그라운드 업데이트 시작
   Future<void> startBackgroundUpdates(
@@ -92,11 +91,12 @@ class GHomeWidgetInitializer extends GInitializer {
 
     if (Platform.isAndroid && enableBackgroundUpdates) {
       try {
-        await Workmanager().registerPeriodicTask(
-          'home_widget_update',
-          'homeWidgetBackgroundUpdate',
-          frequency: frequency,
-        );
+        // WorkManager 기능이 제거됨
+        // await Workmanager().registerPeriodicTask(
+        //   'home_widget_update',
+        //   'homeWidgetBackgroundUpdate',
+        //   frequency: frequency,
+        // );
         Logger.d('🏠 백그라운드 업데이트 시작: ${frequency.inMinutes}분 간격');
       } catch (e) {
         Logger.e('🏠 백그라운드 업데이트 시작 실패: $e');
@@ -104,17 +104,18 @@ class GHomeWidgetInitializer extends GInitializer {
     }
   }
 
-  /// 백그라운드 업데이트 중지
-  Future<void> stopBackgroundUpdates() async {
-    if (Platform.isAndroid && enableBackgroundUpdates) {
-      try {
-        await Workmanager().cancelByUniqueName('home_widget_update');
-        Logger.d('🏠 백그라운드 업데이트 중지');
-      } catch (e) {
-        Logger.e('🏠 백그라운드 업데이트 중지 실패: $e');
-      }
-    }
-  }
+  /// 백그라운드 업데이트 중지 (WorkManager 기능 제거됨)
+  // Future<void> stopBackgroundUpdates() async {
+  //   if (Platform.isAndroid && enableBackgroundUpdates) {
+  //     try {
+  //       // WorkManager 기능이 제거됨
+  //       // await Workmanager().cancelByUniqueName('home_widget_update');
+  //       Logger.d('🏠 백그라운드 업데이트 중지');
+  //     } catch (e) {
+  //       Logger.e('🏠 백그라운드 업데이트 중지 실패: $e');
+  //     }
+  //   }
+  // }
 
   GHomeWidgetService get service {
     if (!_isInitialized) {
@@ -129,7 +130,7 @@ class GHomeWidgetInitializer extends GInitializer {
   Future<void> dispose() async {
     if (_service != null) {
       // 백그라운드 업데이트 중지
-      await stopBackgroundUpdates();
+      // await stopBackgroundUpdates();
 
       // Facade에서 서비스 해제
       GHomeWidget.unregisterService();
@@ -143,29 +144,30 @@ class GHomeWidgetInitializer extends GInitializer {
   }
 }
 
-/// WorkManager 콜백 디스패처 (Android 백그라운드 업데이트용)
-@pragma("vm:entry-point")
-void _callbackDispatcher() async {
-  Workmanager().executeTask((taskName, inputData) async {
-    if (taskName == 'homeWidgetBackgroundUpdate') {
-      try {
-        // 백그라운드에서 위젯 데이터 업데이트
-        final now = DateTime.now();
-        await Future.wait([
-          GHomeWidget.saveData('last_updated', now.toIso8601String()),
-          GHomeWidget.saveData('background_update', 'true'),
-        ]);
+/// WorkManager 콜백 디스패처 (Android 백그라운드 업데이트용) - WorkManager 기능 제거됨
+// @pragma("vm:entry-point")
+// void _callbackDispatcher() async {
+//   // WorkManager 기능이 제거됨
+//   // Workmanager().executeTask((taskName, inputData) async {
+//   //   if (taskName == 'homeWidgetBackgroundUpdate') {
+//   //     try {
+//   //       // 백그라운드에서 위젯 데이터 업데이트
+//   //       final now = DateTime.now();
+//   //       await Future.wait([
+//   //         GHomeWidget.saveData('last_updated', now.toIso8601String()),
+//   //         GHomeWidget.saveData('background_update', 'true'),
+//   //       ]);
 
-        // 위젯 업데이트 요청
-        await GHomeWidget.requestUpdate();
+//   //       // 위젯 업데이트 요청
+//   //       await GHomeWidget.requestUpdate();
 
-        Logger.d('🏠 백그라운드 위젯 업데이트 완료: $now');
-        return true;
-      } catch (e) {
-        Logger.e('🏠 백그라운드 위젯 업데이트 실패: $e');
-        return false;
-      }
-    }
-    return false;
-  });
-}
+//   //       Logger.d('🏠 백그라운드 위젯 업데이트 완료: $now');
+//   //       return true;
+//   //     } catch (e) {
+//   //       Logger.e('🏠 백그라운드 위젯 업데이트 실패: $e');
+//   //       return false;
+//   //     }
+//   //   }
+//   //   return false;
+//   // });
+// }
