@@ -2,7 +2,6 @@ library;
 
 /* 위젯 */
 export 'widgets/widget.dart';
-export 'widgets/g_slide_to_unlock.dart';
 
 /* 테마 */
 export 'themes/theme.dart';

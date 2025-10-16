@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g_ui/configs/g_text_config.dart';
+import 'package:g_ui/widgets/g_text.dart';
 
 class GSlideToUnlock extends StatefulWidget {
   final String text;
@@ -258,13 +259,11 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
                           ).createShader(bounds);
                         },
                         child: Center(
-                          child: Text(
+                          child: GText(
                             widget.text,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white.withValues(alpha: 0.9),
-                            ),
+                            size: GTextSize.x24,
+                            bold: GTextWeight.medium,
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                         ),
                       );
@@ -314,13 +313,11 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
 
                           // 로딩 텍스트
                           Center(
-                            child: Text(
+                            child: GText(
                               '숏코드 생성중...',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
+                              size: GTextSize.x16,
+                              bold: GTextWeight.medium,
+                              color: Colors.white,
                             ),
                           ),
                         ],
