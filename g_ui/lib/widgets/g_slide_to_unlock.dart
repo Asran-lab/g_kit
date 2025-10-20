@@ -45,7 +45,7 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
     );
 
     _shimmerController = AnimationController(
-      duration: const Duration(milliseconds: 3500),
+      duration: const Duration(milliseconds: 6000),
       vsync: this,
     );
 
@@ -129,8 +129,8 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
     setState(() => isDragging = false);
 
     final maxDistance = _getMaxDragDistance();
-    if (_dragOffset >= maxDistance * 0.8) {
-      // 슬라이드 완료
+    if (_dragOffset >= maxDistance * 0.98) {
+      // 슬라이드 완료 (98% 이상)
       _completeSlide();
     } else {
       // 원위치로 복귀
@@ -139,8 +139,12 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
   }
 
   void _completeSlide() {
-    _slideController.forward().then((_) {
-      setState(() => _isCompleted = true);
+    final maxDistance = _getMaxDragDistance();
+    _slideController.animateTo(1.0).then((_) {
+      setState(() {
+        _isCompleted = true;
+        _dragOffset = maxDistance;
+      });
       widget.onSlideComplete?.call();
     });
   }
@@ -154,9 +158,28 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
   }
 
   void _resetSlide() {
-    _slideController.reverse().then((_) {
-      setState(() => _dragOffset = 0.0);
+    final startOffset = _dragOffset;
+    _slideController.reset();
+    _slideController.animateTo(1.0).then((_) {
+      _slideController.reset();
     });
+
+    // 현재 dragOffset에서 0으로 애니메이션
+    final animation = Tween<double>(
+      begin: startOffset,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    animation.addListener(() {
+      setState(() {
+        _dragOffset = animation.value;
+      });
+    });
+
+    _slideController.forward();
   }
 
   double _getMaxDragDistance() {
@@ -219,8 +242,8 @@ class GSlideToUnlockState extends State<GSlideToUnlock>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      widget.primaryColor.withValues(alpha: 0.3),
-                      widget.secondaryColor.withValues(alpha: 0.3),
+                      widget.primaryColor,
+                      widget.secondaryColor,
                     ],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
