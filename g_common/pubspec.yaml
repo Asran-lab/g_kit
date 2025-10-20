@@ -19,16 +19,10 @@ dependencies:
   http: ^1.1.0
 
   g_lib:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_lib
-      ref: main
+    path: ../g_lib
 
   g_model:
-    git:
-      url: git@github.com:Asran-lab/g_kit.git
-      path: g_model
-      ref: main
+    path: ../g_model
 
 dev_dependencies:
   flutter_test:
