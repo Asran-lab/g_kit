@@ -11,3 +11,5 @@ export 'package:device_info_plus/device_info_plus.dart';
 export 'package:webview_flutter/webview_flutter.dart';
 
 export 'package:url_launcher/url_launcher.dart';
+
+export 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';

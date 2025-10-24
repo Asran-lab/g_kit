@@ -6,3 +6,4 @@ export 'g_loading.dart';
 export 'g_toast.dart';
 export 'g_gap.dart';
 export 'g_slide_to_unlock.dart';
+export 'g_bottom_navigation.dart';

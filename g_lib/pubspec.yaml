@@ -59,6 +59,8 @@ dependencies:
   # Home Widget 라이브러리
   home_widget: ^0.8.0             # 홈 위젯 관련
 
+  # 네비게이션 라이브러
+  animated_bottom_navigation_bar: ^1.4.0
 
 dev_dependencies:
   flutter_test:

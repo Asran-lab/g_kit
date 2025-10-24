@@ -14,6 +14,9 @@ dependencies:
   
   g_common:
     path: ../g_common
+  
+  animated_bottom_navigation_bar: ^1.3.3
+  flutter_riverpod: ^3.0.1
 
 dev_dependencies:
   flutter_test:
