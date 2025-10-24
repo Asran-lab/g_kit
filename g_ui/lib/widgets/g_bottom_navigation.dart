@@ -159,7 +159,16 @@ class GBottomNavigationState extends ConsumerState<GBottomNavigation>
       floatingActionButton:
           widget.hasCenterButton ? _buildCenterButton() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _buildBottomNavigationBar(colors, bottomNavIndex),
+      bottomNavigationBar: _buildBottomNavigationBar(
+        colors,
+        bottomNavIndex,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        gapLocation:
+            widget.hasCenterButton ? GapLocation.center : GapLocation.none,
+        gapWidth: widget.hasCenterButton ? 80 : 0,
+        leftCornerRadius: 24,
+        rightCornerRadius: 24,
+      ),
     );
   }
 
@@ -204,7 +213,15 @@ class GBottomNavigationState extends ConsumerState<GBottomNavigation>
     );
   }
 
-  Widget _buildBottomNavigationBar(ColorScheme colors, int bottomNavIndex) {
+  Widget _buildBottomNavigationBar(
+    ColorScheme colors,
+    int bottomNavIndex, {
+    NotchSmoothness notchSmoothness = NotchSmoothness.softEdge,
+    GapLocation gapLocation = GapLocation.center,
+    double gapWidth = 80,
+    double leftCornerRadius = 24,
+    double rightCornerRadius = 24,
+  }) {
     return AnimatedBottomNavigationBar.builder(
       itemCount: widget.items.length,
       tabBuilder: (int index, bool isActive) {
@@ -237,12 +254,11 @@ class GBottomNavigationState extends ConsumerState<GBottomNavigation>
       activeIndex: bottomNavIndex,
       splashColor: colors.primary,
       splashSpeedInMilliseconds: 300,
-      notchSmoothness: NotchSmoothness.softEdge,
-      gapLocation:
-          widget.hasCenterButton ? GapLocation.center : GapLocation.none,
-      gapWidth: widget.hasCenterButton ? 80 : 0,
-      leftCornerRadius: 24,
-      rightCornerRadius: 24,
+      notchSmoothness: notchSmoothness,
+      gapLocation: gapLocation,
+      gapWidth: gapWidth,
+      leftCornerRadius: leftCornerRadius,
+      rightCornerRadius: rightCornerRadius,
       onTap: (index) {
         final realIndex = _toActualIndex(index);
         _handleTap(realIndex);
