@@ -12,7 +12,9 @@ import 'package:g_model/network/g_response.dart';
 /// 네트워크 컨텍스트 클래스
 /// HTTP와 Socket 전략을 관리하고 적절한 전략으로 요청을 위임합니다.
 class GNetworkContext {
-  final Map<GNetworkType, GNetworkStrategy> _strategies = {};
+  // 타입별 전략 저장 (타입 안전성 확보)
+  GHttpStrategy? _httpStrategy;
+  GSocketStrategy? _socketStrategy;
   GNetworkType? _currentType;
   GNetworkStrategy? _currentStrategy;
 
@@ -21,27 +23,51 @@ class GNetworkContext {
     GSocketNetworkStrategy? socketStrategy,
   }) {
     if (httpStrategy != null) {
-      registerStrategy(GNetworkType.http, httpStrategy);
+      registerHttpStrategy(httpStrategy);
     }
     if (socketStrategy != null) {
-      registerStrategy(GNetworkType.socket, socketStrategy);
+      registerSocketStrategy(socketStrategy);
     }
   }
 
-  /// 전략 등록
-  void registerStrategy(GNetworkType type, GNetworkStrategy strategy) {
-    _strategies[type] = strategy;
+  /// HTTP 전략 등록
+  void registerHttpStrategy(GHttpStrategy strategy) {
+    _httpStrategy = strategy;
 
     // 첫 번째 등록된 전략을 기본 전략으로 설정
     if (_currentType == null) {
-      _currentType = type;
+      _currentType = GNetworkType.http;
       _currentStrategy = strategy;
+    }
+  }
+
+  /// Socket 전략 등록
+  void registerSocketStrategy(GSocketStrategy strategy) {
+    _socketStrategy = strategy;
+
+    // 첫 번째 등록된 전략을 기본 전략으로 설정
+    if (_currentType == null) {
+      _currentType = GNetworkType.socket;
+      _currentStrategy = strategy;
+    }
+  }
+
+  /// 전략 등록 (하위 호환성을 위한 메서드)
+  void registerStrategy(GNetworkType type, GNetworkStrategy strategy) {
+    if (strategy is GHttpStrategy) {
+      registerHttpStrategy(strategy);
+    } else if (strategy is GSocketStrategy) {
+      registerSocketStrategy(strategy);
+    } else {
+      throw ArgumentError(
+        'Strategy must implement either GHttpStrategy or GSocketStrategy',
+      );
     }
   }
 
   /// 현재 활성 전략 설정
   void _setCurrentStrategy(GNetworkType type) {
-    final strategy = _strategies[type];
+    final strategy = type == GNetworkType.http ? _httpStrategy : _socketStrategy;
     if (strategy == null) {
       throw Exception('Strategy for $type not found');
     }
@@ -56,12 +82,8 @@ class GNetworkContext {
   }) async {
     // 동일한 전략이지만 새로운 옵션이 있는 경우 재설정
     if (_currentType == type && options != null) {
-      final currentStrategy = _currentStrategy;
-      if (currentStrategy is GHttpNetworkStrategy &&
-          options is HttpNetworkOption) {
-        currentStrategy.reinitializeDio(options);
-        return;
-      }
+      await _currentStrategy!.reinitializeWithOptions(options);
+      return;
     }
 
     // 전략 전환
@@ -85,28 +107,20 @@ class GNetworkContext {
     return _currentStrategy!;
   }
 
-  /// HTTP 전략 가져오기
-  GHttpNetworkStrategy _getHttpStrategy() {
-    final strategy = _strategies[GNetworkType.http];
-    if (strategy == null) {
+  /// HTTP 전략 가져오기 (타입 안전)
+  GHttpStrategy _getHttpStrategy() {
+    if (_httpStrategy == null) {
       throw Exception('HTTP strategy not registered');
     }
-    if (strategy is! GHttpNetworkStrategy) {
-      throw Exception('Registered strategy is not HTTP strategy');
-    }
-    return strategy;
+    return _httpStrategy!;
   }
 
-  /// Socket 전략 가져오기
-  GSocketNetworkStrategy _getSocketStrategy() {
-    final strategy = _strategies[GNetworkType.socket];
-    if (strategy == null) {
+  /// Socket 전략 가져오기 (타입 안전)
+  GSocketStrategy _getSocketStrategy() {
+    if (_socketStrategy == null) {
       throw Exception('Socket strategy not registered');
     }
-    if (strategy is! GSocketNetworkStrategy) {
-      throw Exception('Registered strategy is not Socket strategy');
-    }
-    return strategy;
+    return _socketStrategy!;
   }
 
   // HTTP 메서드들 - HTTP 전략으로 위임

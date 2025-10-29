@@ -14,6 +14,12 @@ abstract class GNetworkStrategy {
     required GNetworkType type,
     GNetworkOption? options,
   });
+
+  /// 네트워크 전략을 새로운 옵션으로 재초기화합니다.
+  ///
+  /// 동일한 전략을 유지하면서 설정만 변경하고자 할 때 사용됩니다.
+  /// 각 구현체는 자신의 옵션 타입에 맞게 재초기화를 수행합니다.
+  Future<void> reinitializeWithOptions(GNetworkOption options);
 }
 
 /// HTTP 전략

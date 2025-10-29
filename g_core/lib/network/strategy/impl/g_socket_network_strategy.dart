@@ -110,6 +110,23 @@ class GSocketNetworkStrategy extends GNetworkStrategy
     });
   }
 
+  @override
+  Future<void> reinitializeWithOptions(GNetworkOption options) async {
+    if (options is! SocketNetworkOption) {
+      throw ArgumentError(
+        'Expected SocketNetworkOption but received ${options.runtimeType}',
+      );
+    }
+
+    // 기존 소켓 연결 정리
+    if (_isConnected) {
+      await disconnect();
+    }
+
+    // 새로운 옵션으로 소켓 재초기화
+    _initializeSocket(options);
+  }
+
   void _initializeSocket([SocketNetworkOption? options]) {
     final optionBuilder = OptionBuilder()
         .setTransports(['websocket'])

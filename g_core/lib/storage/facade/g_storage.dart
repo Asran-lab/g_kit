@@ -10,8 +10,10 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.get(key: key, type: type);
+    return GStorageInitializer.context.get(
+      key: key,
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 쓰기
@@ -25,9 +27,12 @@ class GStorage {
       throw ArgumentError('Key cannot be empty');
     }
 
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context
-        .set(key: key, value: value, until: until, type: type);
+    return GStorageInitializer.context.set(
+      key: key,
+      value: value,
+      until: until,
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 삭제
@@ -35,8 +40,10 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.delete(key: key, type: type);
+    return GStorageInitializer.context.delete(
+      key: key,
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 삭제
@@ -44,24 +51,28 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.clear(key: key, type: type);
+    return GStorageInitializer.context.clear(
+      key: key,
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 모두 삭제
   static Future<void> clearAll({
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.clearAll(type: type);
+    return GStorageInitializer.context.clearAll(
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 키 조회
   static Future<List<String>?> getKeys({
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.getKeys(type: type);
+    return GStorageInitializer.context.getKeys(
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// 만료된 데이터 정리
@@ -69,8 +80,9 @@ class GStorage {
     bool? isSecure,
   }) async {
     if (isSecure != null) {
-      final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-      return GStorageInitializer.context.cleanupExpired(type: type);
+      return GStorageInitializer.context.cleanupExpired(
+        type: GStorageType.fromBool(isSecure),
+      );
     } else {
       // 모든 타입에서 만료된 데이터 정리
       return GStorageInitializer.context.cleanupExpired();
@@ -82,8 +94,10 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    final type = isSecure ? GStorageType.secure : GStorageType.prefs;
-    return GStorageInitializer.context.getExpiration(key: key, type: type);
+    return GStorageInitializer.context.getExpiration(
+      key: key,
+      type: GStorageType.fromBool(isSecure),
+    );
   }
 
   /// TTL과 함께 데이터 저장

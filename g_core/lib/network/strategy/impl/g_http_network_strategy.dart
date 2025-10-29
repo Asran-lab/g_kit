@@ -116,6 +116,16 @@ class GHttpNetworkStrategy extends GNetworkStrategy
     return allFingerprints;
   }
 
+  @override
+  Future<void> reinitializeWithOptions(GNetworkOption options) async {
+    if (options is! HttpNetworkOption) {
+      throw ArgumentError(
+        'Expected HttpNetworkOption but received ${options.runtimeType}',
+      );
+    }
+    reinitializeDio(options);
+  }
+
   /// Dio 인스턴스를 재초기화합니다
   void reinitializeDio([HttpNetworkOption? newOptions]) {
     //  Dio 인스턴스 정리 (안전하게 처리)
