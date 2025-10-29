@@ -10,6 +10,7 @@ export 'auth/g_short_code.dart';
 // base
 export 'base/g_base_type.dart';
 export 'base/g_either.dart';
+export 'base/g_facade.dart';
 
 // network
 export 'network/g_response.dart';

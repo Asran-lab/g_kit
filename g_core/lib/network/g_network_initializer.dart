@@ -2,33 +2,52 @@ import 'package:g_common/g_common.dart';
 import 'package:g_core/network/common/g_network_option.dart';
 import 'package:g_core/network/common/g_network_type.dart';
 import 'package:g_core/network/context/g_network_context.dart';
-import 'package:g_core/network/facade/g_network.dart';
 import 'package:g_core/network/factory/g_network_factory.dart';
-import 'package:g_model/initializer/g_initializer.dart';
+import 'package:g_model/g_model.dart';
 
 /// 네트워크 초기화 클래스
 /// 네트워크 모듈의 초기화를 담당하며, 다양한 설정 옵션을 지원합니다.
-class GNetworkInitializer extends GInitializer {
-  final GNetworkType? _type;
-  final HttpNetworkOption? _httpOptions;
-  final SocketNetworkOption? _socketOptions;
-  final bool _autoConnect;
+class GNetworkInitializer extends GInitializer
+    implements GContextInitializer<GNetworkContext> {
+  static final GNetworkInitializer _instance = GNetworkInitializer._internal();
+  factory GNetworkInitializer() => _instance;
+  GNetworkInitializer._internal();
 
-  GNetworkInitializer({
+  GNetworkType? _type;
+  HttpNetworkOption? _httpOptions;
+  SocketNetworkOption? _socketOptions;
+  bool _autoConnect = true;
+
+  GNetworkContext? _context;
+  bool _isInitialized = false;
+
+  /// 초기화 설정 (initialize 호출 전에 설정 가능)
+  void configure({
     GNetworkType? type,
     HttpNetworkOption? httpOptions,
     SocketNetworkOption? socketOptions,
     bool autoConnect = true,
-  })  : _type = type,
-        _httpOptions = httpOptions,
-        _socketOptions = socketOptions,
-        _autoConnect = autoConnect;
-
-  static GNetworkContext? _context;
-  static bool _isInitialized = false;
+  }) {
+    _type = type;
+    _httpOptions = httpOptions;
+    _socketOptions = socketOptions;
+    _autoConnect = autoConnect;
+  }
 
   @override
   String get name => 'network';
+
+  @override
+  GNetworkContext get context {
+    if (!_isInitialized) {
+      throw StateError(
+          'GNetworkInitializer is not initialized. Call initialize() first.');
+    }
+    return _context!;
+  }
+
+  @override
+  bool get isInitialized => _isInitialized;
 
   @override
   Future<void> initialize() async {
@@ -131,50 +150,19 @@ class GNetworkInitializer extends GInitializer {
 
   /// Facade 초기화
   void _initializeFacade() {
-    // Facade에 컨텍스트 설정
-    GNetwork.initialize(
-      httpOptions: _httpOptions,
-      socketOptions: _socketOptions,
-    );
+    // Facade가 이 initializer의 context를 사용하도록 연결
+    // GNetwork는 이제 GContextFacade를 통해 자동으로 context에 접근
   }
-
-  /// 컨텍스트 가져오기
-  static GNetworkContext get context {
-    if (_context == null) {
-      throw Exception('GNetworkContext가 초기화되지 않았습니다. initialize()를 먼저 호출하세요.');
-    }
-    return _context!;
-  }
-
-  /// 초기화 상태 확인
-  static bool get isInitialized => _isInitialized;
 
   /// 초기화 리셋 (테스트용)
-  static void reset() {
+  void reset() {
     _context = null;
     _isInitialized = false;
     Logger.d('🔄 Network context reset');
   }
 
-  /// 연결 상태 확인
-  static bool get isConnected {
-    if (!isInitialized) return false;
-    return context.isConnected;
-  }
-
-  /// 전략 전환
-  static Future<void> switchTo({
-    required GNetworkType type,
-    GNetworkOption? options,
-  }) async {
-    if (!isInitialized) {
-      throw Exception('Network not initialized. Call initialize() first.');
-    }
-    await context.switchTo(type: type, options: options);
-  }
-
   /// 정리
-  static Future<void> dispose() async {
+  Future<void> dispose() async {
     if (_context != null) {
       await guardFuture(() async {
         // Socket 연결 해제

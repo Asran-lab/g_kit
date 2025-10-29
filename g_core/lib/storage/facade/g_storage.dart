@@ -1,16 +1,21 @@
 import 'package:g_core/storage/common/g_storage_type.dart' show GStorageType;
+import 'package:g_core/storage/context/g_storage_context.dart';
 import 'package:g_core/storage/g_storage_initializer.dart';
+import 'package:g_model/g_model.dart';
 
-class GStorage {
-  /// 초기화 상태 확인
-  static bool get isInitialized => GStorageInitializer.isInitialized;
+/// Storage Facade 클래스
+///
+/// GContextFacade를 상속하여 표준화된 패턴을 따릅니다.
+class GStorage extends GContextFacade<GStorageContext, GStorageInitializer> {
+  GStorage._() : super(GStorageInitializer());
+  static final GStorage _instance = GStorage._();
 
   /// 읽기
   static Future<dynamic> get({
     required String key,
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.get(
+    return _instance.context.get(
       key: key,
       type: GStorageType.fromBool(isSecure),
     );
@@ -27,7 +32,7 @@ class GStorage {
       throw ArgumentError('Key cannot be empty');
     }
 
-    return GStorageInitializer.context.set(
+    return _instance.context.set(
       key: key,
       value: value,
       until: until,
@@ -40,7 +45,7 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.delete(
+    return _instance.context.delete(
       key: key,
       type: GStorageType.fromBool(isSecure),
     );
@@ -51,7 +56,7 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.clear(
+    return _instance.context.clear(
       key: key,
       type: GStorageType.fromBool(isSecure),
     );
@@ -61,7 +66,7 @@ class GStorage {
   static Future<void> clearAll({
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.clearAll(
+    return _instance.context.clearAll(
       type: GStorageType.fromBool(isSecure),
     );
   }
@@ -70,7 +75,7 @@ class GStorage {
   static Future<List<String>?> getKeys({
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.getKeys(
+    return _instance.context.getKeys(
       type: GStorageType.fromBool(isSecure),
     );
   }
@@ -80,12 +85,12 @@ class GStorage {
     bool? isSecure,
   }) async {
     if (isSecure != null) {
-      return GStorageInitializer.context.cleanupExpired(
+      return _instance.context.cleanupExpired(
         type: GStorageType.fromBool(isSecure),
       );
     } else {
       // 모든 타입에서 만료된 데이터 정리
-      return GStorageInitializer.context.cleanupExpired();
+      return _instance.context.cleanupExpired();
     }
   }
 
@@ -94,7 +99,7 @@ class GStorage {
     required String key,
     bool isSecure = false,
   }) async {
-    return GStorageInitializer.context.getExpiration(
+    return _instance.context.getExpiration(
       key: key,
       type: GStorageType.fromBool(isSecure),
     );

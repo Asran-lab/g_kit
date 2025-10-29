@@ -1,14 +1,15 @@
 import 'package:flutter/services.dart';
 import 'package:g_common/utils/g_guard.dart' show guardFuture;
 import 'package:g_common/utils/g_logger.dart' show Logger;
-import 'package:g_model/initializer/g_initializer.dart';
+import 'package:g_model/g_model.dart';
 import 'service/g_biometric_service.dart';
 import 'service/g_biometric_impl.dart';
 
 /// 생체인식 초기화 클래스
 ///
 /// GInitializer를 상속하여 플러그인 초기화 시스템과 통합됩니다.
-class GBiometricInitializer extends GInitializer {
+class GBiometricInitializer extends GInitializer
+    implements GServiceInitializer<GBiometricService> {
   static final GBiometricInitializer _instance =
       GBiometricInitializer._internal();
   factory GBiometricInitializer() => _instance;
@@ -36,6 +37,7 @@ class GBiometricInitializer extends GInitializer {
     });
   }
 
+  @override
   GBiometricService get service {
     if (!_isInitialized) {
       throw StateError(
@@ -44,6 +46,7 @@ class GBiometricInitializer extends GInitializer {
     return _service!;
   }
 
+  @override
   bool get isInitialized => _isInitialized;
 
   Future<void> dispose() async {

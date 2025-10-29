@@ -1,5 +1,7 @@
 import 'package:g_lib/g_lib_plugin.dart';
+import 'package:g_model/g_model.dart';
 import 'package:g_plugin/biometric/g_biometric_initializer.dart';
+import 'package:g_plugin/biometric/service/g_biometric_service.dart';
 
 /// 생체인식 모듈의 Facade 클래스
 ///
@@ -20,32 +22,29 @@ import 'package:g_plugin/biometric/g_biometric_initializer.dart';
 /// ```
 ///
 /// 주의: 사용 전에 GPluginInitializer.initializeAll()을 통해 초기화해야 합니다.
-class GBiometric {
-  static final GBiometricInitializer _initializer = GBiometricInitializer();
-
-  /// 초기화 상태 확인
-  static bool get isInitialized => _initializer.isInitialized;
-
+class GBiometric extends GServiceFacade<GBiometricService, GBiometricInitializer> {
+  GBiometric._() : super(GBiometricInitializer());
+  static final GBiometric _instance = GBiometric._();
 
   /// 디바이스가 생체 인증을 지원하는지 확인
   ///
   /// 지문, Face ID, 홍채 인식 등을 지원하는지 확인합니다.
   static Future<bool> isDeviceSupported() async {
-    return await _initializer.service.isDeviceSupported();
+    return await _instance.service.isDeviceSupported();
   }
 
   /// 생체인식 사용 가능 여부 확인
   ///
   /// 하드웨어 지원 + 등록된 생체정보 존재 여부를 확인합니다.
   static Future<bool> canCheckBiometrics() async {
-    return await _initializer.service.canCheckBiometrics();
+    return await _instance.service.canCheckBiometrics();
   }
 
   /// 사용 가능한 생체인식 타입 목록
   ///
   /// 디바이스에서 사용 가능한 생체인식 타입들을 반환합니다.
   static Future<List<BiometricType>> availableBiometrics() async {
-    return await _initializer.service.availableBiometrics();
+    return await _instance.service.availableBiometrics();
   }
 
   /// 생체인식 인증
@@ -60,17 +59,10 @@ class GBiometric {
     bool biometricOnly = true,
     bool stickyAuth = false,
   }) async {
-    return await _initializer.service.authenticate(
+    return await _instance.service.authenticate(
       localizedReason: localizedReason,
       biometricOnly: biometricOnly,
       stickyAuth: stickyAuth,
     );
-  }
-
-  /// 서비스 정리
-  ///
-  /// 앱 종료 시 호출하여 리소스를 정리합니다.
-  static Future<void> dispose() async {
-    await _initializer.dispose();
   }
 }

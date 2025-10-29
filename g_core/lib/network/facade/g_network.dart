@@ -2,27 +2,24 @@ import 'package:g_common/g_common.dart';
 import 'package:g_core/network/common/g_network_option.dart';
 import 'package:g_core/network/common/g_network_type.dart';
 import 'package:g_core/network/context/g_network_context.dart';
-import 'package:g_core/network/factory/g_network_factory.dart';
+import 'package:g_core/network/g_network_initializer.dart';
 import 'package:g_lib/g_lib_network.dart';
-import 'package:g_model/base/g_either.dart';
-import 'package:g_model/network/g_exception.dart';
-import 'package:g_model/network/g_response.dart';
+import 'package:g_model/g_model.dart';
 
 /// 네트워크 Facade 클래스
-/// 네트워크 기능에 대한 간단한 인터페이스를 제공합니다.
-class GNetwork {
-  static GNetworkContext? _instance;
-  static GNetworkContext get instance {
-    _instance ??= GNetworkFactory.createDefaultContext();
-    return _instance!;
-  }
+///
+/// GContextFacade를 상속하여 표준화된 패턴을 따릅니다.
+class GNetwork extends GContextFacade<GNetworkContext, GNetworkInitializer> {
+  GNetwork._() : super(GNetworkInitializer());
+  static final GNetwork _instance = GNetwork._();
 
   /// 네트워크 컨텍스트 초기화
   static void initialize({
     HttpNetworkOption? httpOptions,
     SocketNetworkOption? socketOptions,
   }) {
-    _instance = GNetworkFactory.createContext(
+    // GNetworkInitializer는 싱글톤이므로 직접 접근
+    GNetworkInitializer().configure(
       httpOptions: httpOptions,
       socketOptions: socketOptions,
     );
@@ -33,11 +30,11 @@ class GNetwork {
     required GNetworkType type,
     GNetworkOption? options,
   }) async {
-    await instance.switchTo(type: type, options: options);
+    await _instance.context.switchTo(type: type, options: options);
   }
 
   /// 연결 상태 확인
-  static bool get isConnected => instance.isConnected;
+  static bool get isConnected => _instance.context.isConnected;
 
   // HTTP 메서드들
   static Future<GEither<GException, GResponse<T>>> get<T>({
@@ -48,7 +45,7 @@ class GNetwork {
     GJsonConverter<T>? fromJsonT,
     bool? isCache = true,
   }) {
-    return instance.get<T>(
+    return _instance.context.get<T>(
       path: path,
       headers: headers,
       queryParameters: queryParameters,
@@ -66,7 +63,7 @@ class GNetwork {
     Options? options,
     GJsonConverter<T>? fromJsonT,
   }) {
-    return instance.post<T>(
+    return _instance.context.post<T>(
       path: path,
       data: data,
       headers: headers,
@@ -84,7 +81,7 @@ class GNetwork {
     Options? options,
     GJsonConverter<T>? fromJsonT,
   }) {
-    return instance.put<T>(
+    return _instance.context.put<T>(
       path: path,
       data: data,
       headers: headers,
@@ -102,7 +99,7 @@ class GNetwork {
     Options? options,
     GJsonConverter<T>? fromJsonT,
   }) {
-    return instance.patch<T>(
+    return _instance.context.patch<T>(
       path: path,
       data: data,
       headers: headers,
@@ -119,7 +116,7 @@ class GNetwork {
     Options? options,
     GJsonConverter<T>? fromJsonT,
   }) {
-    return instance.delete<T>(
+    return _instance.context.delete<T>(
       path: path,
       headers: headers,
       queryParameters: queryParameters,
@@ -129,32 +126,32 @@ class GNetwork {
   }
 
   // Socket 메서드들
-  static Future<void> connect() => instance.connect();
-  static Future<void> disconnect() => instance.disconnect();
+  static Future<void> connect() => _instance.context.connect();
+  static Future<void> disconnect() => _instance.context.disconnect();
 
   static void on({
     required String event,
     Function(dynamic data)? handler,
   }) {
-    instance.on(event: event, handler: handler);
+    _instance.context.on(event: event, handler: handler);
   }
 
   static Future<void> emit({
     required String event,
     required dynamic data,
   }) {
-    return instance.emit(event: event, data: data);
+    return _instance.context.emit(event: event, data: data);
   }
 
   static Stream<GJson> subscribe({
     required String event,
     GJson? payload,
   }) {
-    return instance.subscribe(event: event, payload: payload);
+    return _instance.context.subscribe(event: event, payload: payload);
   }
 
   static Future<void> unsubscribe({required String event}) {
-    return instance.unsubscribe(event: event);
+    return _instance.context.unsubscribe(event: event);
   }
 
   static Future<GJson> sendWithAck(
@@ -162,6 +159,6 @@ class GNetwork {
     GJson data, {
     Duration timeout = const Duration(seconds: 5),
   }) {
-    return instance.sendWithAck(channel, data, timeout: timeout);
+    return _instance.context.sendWithAck(channel, data, timeout: timeout);
   }
 }
